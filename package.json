@@ -1,0 +1,38 @@
+{
+  "name": "ml-tree-similarity",
+  "version": "0.0.0",
+  "description": "Tree similarity in Javascript",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "src",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --require should --reporter mocha-better-spec-reporter --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mljs/tree-similarity"
+  },
+  "keywords": [
+    "spectra",
+    "similarity",
+    "nmr",
+    "chemistry",
+    "mining",
+    "datamining",
+    "machine",
+    "learning"
+  ],
+  "author": "Miguel Asencio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mljs/tree-similarity/issues"
+  },
+  "homepage": "https://github.com/mljs/tree-similarity",
+  "devDependencies": {
+    "mocha": "latest",
+    "mocha-better-spec-reporter": "latest",
+    "should": "latest"
+  }
+}
