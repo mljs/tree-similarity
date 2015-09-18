@@ -27,20 +27,31 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
     if ((to - from) < minWindow)
         return null;
     var sum = 0;
-    for (var i = 0; X[i] < to; i++) {
-        if (X[i] > from)
-            sum += Y[i];
+    var i = 0;
+    var start, end;
+    for (; i < X.length; i++) { // search first point
+        if (X[i] >= from) {
+            start = i;
+            break;
+        }
+    }
+    for (; i < X.length; i++) {
+        if (X[i] >= to) { // stop at last point
+            end = i;
+            break;
+        }
+        sum += Y[i];
     }
     if (sum < threshold) {
         return null;
     }
+
     var center = 0;
-    for (var j = 0; X[j] < to; j++) {
-        if (X[i] > from)
-            center += X[j] * Y[j];
+    for (i = start; i < end; i++) {
+        center += X[i] * Y[i];
     }
-    center = center / sum;
-    if (((center - from) < 10e-6) || ((to - center) < 10e-6)) {
+    center /= sum;
+    if (((center - from) < 1e-6) || ((to - center) < 1e-6)) {
         return null;
     }
     if ((center - from) < (minWindow / 4)) {
