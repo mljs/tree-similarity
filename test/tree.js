@@ -1,23 +1,30 @@
-"use strict";
+'use strict';
+
 var tree = require('..');
 
-var a = {
-    'x': [1, 2, 3, 4, 5, 6, 7],
-    'y': [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3]
-};
-var b = {
-    'x': [1, 2, 3, 4, 5, 6, 7],
-    'y': [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3]
-};
+describe.skip('Tree similarity', function () {
 
-describe('Tree similarity', function () {
-
-    it('should be correct', function () {
-        tree.calc(a, b, 1, 7).should.be.approximately(0.685253,10e-4);
+    var a, b;
+    beforeEach(function () {
+        a = [
+            [1, 2, 3, 4, 5, 6, 7],
+            [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3]
+        ];
+        b = [
+            [1, 2, 3, 4, 5, 6, 7],
+            [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3]
+        ];
     });
 
-    it('exports tree', function () {
-        tree.createTree(a.x, a.y, 1, 7).center.should.be.approximately(4.5,10e-4);
+    it('should work with two arrays', function () {
+        tree(a, b).should.be.approximately(0.685253, 10e-4);
+    });
+
+    it('should create Tree object', function () {
+        var theTree = tree.createTree(a);
+        theTree.should.have.properties(['center', 'sum', 'left', 'right']);
+        theTree.center.should.be.approximately(4.5, 10e-4);
+        theTree.sum.should.equal(10.2);
     });
 
 });
