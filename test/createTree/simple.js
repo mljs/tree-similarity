@@ -1,6 +1,6 @@
 'use strict';
 
-var createTree = require('..').createTree;
+var createTree = require('../..').createTree;
 var assert = require('assert');
 
 describe('simple trees', function () {

@@ -2,7 +2,7 @@
 
 var tree = require('..');
 
-describe('Tree similarity', function () {
+describe.skip('Tree similarity', function () {
 
     var a, b;
     beforeEach(function () {
