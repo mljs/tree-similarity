@@ -1,6 +1,6 @@
 'use strict';
 
-var tree = require('..');
+const tree = require('..');
 
 describe.skip('Tree similarity', function () {
 

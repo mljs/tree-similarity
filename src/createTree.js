@@ -1,8 +1,6 @@
 'use strict';
 
-var extend = require('extend');
-
-var defaultOptions = {
+const defaultOptions = {
     minWindow: 0.16,
     threshold: 0.01
 };
@@ -10,13 +8,13 @@ var defaultOptions = {
 /**
  * Function that creates the tree
  * @param {[[number], [number]]} spectrum
- * @param {Object} options
- * @returns {Tree | null}
+ * @param {object} options
+ * @return {Tree | null}
  * left and right have the same structure than the parent,
  * or are null if they are leaves
  */
 function createTree(spectrum, options) {
-    options = extend({}, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, options);
     var X = spectrum[0];
     var from = options.from === undefined ? X[0] : options.from;
     var to = options.to === undefined ? X[X.length - 1] : options.to;
@@ -24,8 +22,9 @@ function createTree(spectrum, options) {
 }
 
 function mainCreateTree(X, Y, from, to, minWindow, threshold) {
-    if ((to - from) < minWindow)
+    if ((to - from) < minWindow) {
         return null;
+    }
     var sum = 0;
     var i = 0;
     var start, end;
@@ -56,12 +55,10 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
     }
     if ((center - from) < (minWindow / 4)) {
         return mainCreateTree(X, Y, center, to, minWindow, threshold);
-    }
-    else {
+    } else {
         if ((to - center) < (minWindow / 4)) {
             return mainCreateTree(X, Y, from, center, minWindow, threshold);
-        }
-        else {
+        } else {
             return new Tree(
                 sum, center,
                 mainCreateTree(X, Y, from, center, minWindow, threshold),

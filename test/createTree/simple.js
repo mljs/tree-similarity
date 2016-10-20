@@ -1,7 +1,7 @@
 'use strict';
 
-var createTree = require('../..').createTree;
-var assert = require('assert');
+const createTree = require('../..').createTree;
+const assert = require('assert');
 
 describe('simple trees', function () {
 
@@ -30,7 +30,7 @@ describe('simple trees', function () {
         var x = new Array(101);
         var y = new Array(101);
         for (var i = 0; i < 101; i++) {
-            x[i]=i;
+            x[i] = i;
             y[i] = 0;
         }
         y[20] = 20;

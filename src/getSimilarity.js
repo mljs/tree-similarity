@@ -1,13 +1,13 @@
 'use strict';
 
-var createTree = require('./createTree');
+const createTree = require('./createTree');
 
 /**
  * Similarity between two nodes
  * @param {Tree} a - tree A node
  * @param {Tree} b - tree B node
- * @param {Object} options
- * @returns {number} similarity measure between tree nodes
+ * @param {object} options
+ * @return {number} similarity measure between tree nodes
  */
 function treeSimilarity(a, b, options) {
     if (a === null || b === null) {
