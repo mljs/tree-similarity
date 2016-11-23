@@ -31,9 +31,9 @@
   },
   "homepage": "https://github.com/mljs/tree-similarity",
   "devDependencies": {
-    "mocha": "^2.3.2",
-    "mocha-better-spec-reporter": "^2.1.2",
-    "should": "^7.1.0"
+    "mocha": "^3.1.2",
+    "mocha-better-spec-reporter": "^3.0.2",
+    "should": "^11.1.1"
   },
   "dependencies": {
     "extend": "^3.0.0"
