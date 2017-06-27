@@ -1,5 +1,3 @@
-'use strict';
-
 const defaultOptions = {
     minWindow: 0.16,
     threshold: 0.01
@@ -13,7 +11,7 @@ const defaultOptions = {
  * left and right have the same structure than the parent,
  * or are null if they are leaves
  */
-function createTree(spectrum, options) {
+export function createTree(spectrum, options) {
     options = Object.assign({}, defaultOptions, options);
     var X = spectrum[0];
     var from = options.from === undefined ? X[0] : options.from;
@@ -74,5 +72,3 @@ function Tree(sum, center, left, right) {
     this.left = left;
     this.right = right;
 }
-
-module.exports = createTree;

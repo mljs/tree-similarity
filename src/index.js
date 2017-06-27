@@ -1,25 +1,24 @@
-'use strict';
+import {getSimilarity} from './getSimilarity';
+export {createTree} from './createTree';
 
-const createTree = require('./createTree');
-const getSimilarity = require('./getSimilarity');
+export default function treeSimilarity(A, B, options) {
+    const {
+        alpha = 0.1,
+        beta = 0.33,
+        gamma = 0.001
+    } = options;
 
-var defaultOptions = {
-    alpha: 0.1,
-    beta: 0.33,
-    gamma: 0.001
-};
-
-function treeSimilarity(A, B, options) {
-    options = Object.assign({}, defaultOptions, options);
-    return getSimilarity(A, B, options);
+    return getSimilarity(A, B, {alpha, beta, gamma});
 }
 
-module.exports = treeSimilarity;
+export function getFunction(options = {}) {
+    const {
+        alpha = 0.1,
+        beta = 0.33,
+        gamma = 0.001
+    } = options;
 
-module.exports.createTree = createTree;
-module.exports.getFunction = function getTreeSimilarityFunction(options) {
-    options = Object.assign({}, defaultOptions, options);
     return function treeSimilarity(A, B) {
-        return getSimilarity(A, B, options);
+        return getSimilarity(A, B, {alpha, beta, gamma});
     };
-};
+}

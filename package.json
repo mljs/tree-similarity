@@ -1,48 +1,41 @@
 {
   "name": "ml-tree-similarity",
   "version": "0.0.0",
-  "description": "Tree similarity in Javascript",
-  "main": "src/index.js",
-  "directories": {
-    "lib": "src",
-    "test": "test"
-  },
+  "description": "Compares two spectra using a tree similarity",
+  "main": "lib/index.js",
+  "module": "src/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
-    "eslint": "eslint src test",
+    "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
-    "test": "npm run test-mocha && npm run eslint",
-    "test-cov": "istanbul cover node_modules/.bin/_mocha -- --require should --reporter dot --recursive",
-    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- --require should --reporter dot --recursive",
-    "test-mocha": "mocha --require should --reporter mocha-better-spec-reporter"
+    "prepublish": "rollup -c",
+    "test": "run-s testonly eslint",
+    "testonly": "jest"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mljs/tree-similarity"
+    "url": "git+https://github.com/mljs/tree-similarity.git"
   },
-  "keywords": [
-    "spectra",
-    "similarity",
-    "nmr",
-    "chemistry",
-    "mining",
-    "datamining",
-    "machine",
-    "learning"
-  ],
+  "keywords": [],
   "author": "Miguel Asencio",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mljs/tree-similarity/issues"
   },
-  "tonicExampleFilename": "./tonic.js",
-  "homepage": "https://github.com/mljs/tree-similarity",
+  "homepage": "https://github.com/mljs/tree-similarity#readme",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
-    "eslint": "^3.4.0",
-    "eslint-config-cheminfo": "^1.2.0",
-    "eslint-plugin-no-only-tests": "^1.1.0",
-    "istanbul": "^0.4.4",
-    "mocha": "^3.0.2",
-    "mocha-better-spec-reporter": "^3.0.2",
-    "should": "^11.1.0"
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "eslint": "^4.1.1",
+    "eslint-config-cheminfo": "^1.8.0",
+    "eslint-plugin-no-only-tests": "^2.0.0",
+    "jest": "^20.0.4",
+    "npm-run-all": "^4.0.2",
+    "rollup": "^0.43.0"
   }
 }
