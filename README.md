@@ -57,6 +57,12 @@ var A = tree.createTree(a, options);
 var ans = tree(A, b, options);
 ```
 
+## Literature
+
+This algorithm was used for NMR spectra comparison:
+* https://doi.org/10.1186/1758-2946-6-9
+* https://doi.org/10.1016/j.chemolab.2013.05.009
+
 ## License
 
   [MIT](./LICENSE)
