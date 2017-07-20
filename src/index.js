@@ -1,7 +1,7 @@
 import {getSimilarity} from './getSimilarity';
 export {createTree} from './createTree';
 
-export function treeSimilarity(A, B, options =  {}) {
+export function treeSimilarity(A, B, options = {}) {
     return getSimilarity(A, B, options);
 }
 

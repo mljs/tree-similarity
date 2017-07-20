@@ -27,5 +27,5 @@ export function getSimilarity(a, b, options = {}) {
     var C = (alpha * Math.min(a.sum, b.sum) / Math.max(a.sum, b.sum) +
         (1 - alpha) * Math.exp(-gamma * Math.abs(a.center - b.center)));
 
-    return beta * C + (1 - beta) * (getSimilarity(a.left, b.left, options) + getSimilarity(a.right, b.right, options));
+    return beta * C + (1 - beta) * (getSimilarity(a.left, b.left, options) + getSimilarity(a.right, b.right, options)) / 2;
 }

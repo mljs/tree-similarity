@@ -11,12 +11,12 @@ var b = [
 
 describe('Tree similarity', () => {
     it('should work with two arrays', () => {
-        expect(treeSimilarity(a, b)).toBeCloseTo(0.685253, 4);
+        expect(treeSimilarity(a, b)).toBeCloseTo(0.653354, 4);
     });
 
     it('should create Tree object', () => {
         var tree = createTree(a);
-        expect(tree.center).toBeCloseTo(4.5, 4);
-        expect(tree.sum).toBeCloseTo(10.2, 4);
+        expect(tree.center).toBeCloseTo(4.3714, 4);
+        expect(tree.sum).toBeCloseTo(10.5, 4);
     });
 });
