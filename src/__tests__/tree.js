@@ -1,4 +1,4 @@
-import treeSimilarity, {createTree} from '..';
+import {treeSimilarity, createTree} from '..';
 
 var a = [
     [1, 2, 3, 4, 5, 6, 7],

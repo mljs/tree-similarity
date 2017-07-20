@@ -1,3 +1,6 @@
+import binarySearch from 'binary-search';
+import {asc} from 'num-sort';
+
 /**
  * Function that creates the tree
  * @param {Array<Array<number>>} spectrum
@@ -22,34 +25,28 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
     if ((to - from) < minWindow) {
         return null;
     }
-    var sum = 0;
-    var start, end;
-    var i = 0;
 
     // search first point
-    for (; i < X.length; i++) {
-        if (X[i] >= from) {
-            start = i;
-            break;
-        }
+    var start = binarySearch(X, from, asc);
+    if (start < 0) {
+        start = ~start;
     }
 
     // stop at last point
-    for (; i < X.length; i++) {
+    var sum = 0;
+    var center = 0;
+    for (var i = start; i < X.length; i++) {
         if (X[i] >= to) {
-            end = i;
             break;
         }
         sum += Y[i];
+        center += X[i] * Y[i];
     }
+
     if (sum < threshold) {
         return null;
     }
 
-    var center = 0;
-    for (i = start; i < end; i++) {
-        center += X[i] * Y[i];
-    }
     center /= sum;
     if (((center - from) < 1e-6) || ((to - center) < 1e-6)) {
         return null;
