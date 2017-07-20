@@ -33,9 +33,9 @@ var ans = tree(A, b, options);
 
 ## [API Documentation](https://mljs.github.io/tree-similarity/)
 
-This algorithm was used for NMR spectra comparison:
-* https://doi.org/10.1186/1758-2946-6-9
-* https://doi.org/10.1016/j.chemolab.2013.05.009
+This algorithm was based in the following papers:
+* [A new method for the comparison of 1H NMR predictors based on tree-similarity of spectra](https://doi.org/10.1186/1758-2946-6-9)
+* [Fast and shift-insensitive similarity comparisons of NMR using a tree-representation of spectra](https://doi.org/10.1016/j.chemolab.2013.05.009)
 
 ## License
 
