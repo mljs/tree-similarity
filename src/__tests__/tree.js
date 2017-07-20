@@ -1,4 +1,4 @@
-import {treeSimilarity, createTree} from '..';
+import {treeSimilarity, getFunction} from '..';
 
 var a = [
     [1, 2, 3, 4, 5, 6, 7],
@@ -14,9 +14,13 @@ describe('Tree similarity', () => {
         expect(treeSimilarity(a, b)).toBeCloseTo(0.653354, 4);
     });
 
-    it('should create Tree object', () => {
-        var tree = createTree(a);
-        expect(tree.center).toBeCloseTo(4.3714, 4);
-        expect(tree.sum).toBeCloseTo(10.5, 4);
+    it('should currify the options', () => {
+        var options = {
+            alpha: 0.4,
+            beta: 0.5,
+            gamma: 0.001
+        };
+        var func = getFunction(options);
+        expect(func(a, b)).toBe(treeSimilarity(a, b, options));
     });
 });

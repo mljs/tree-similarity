@@ -4,7 +4,7 @@ import {createTree} from './createTree';
  * Similarity between two nodes
  * @param {Tree|Array<Array<number>>} a - tree A node
  * @param {Tree|Array<Array<number>>} b - tree B node
- * @param {object} options
+ * @param {object} [options]
  * @return {number} similarity measure between tree nodes
  */
 export function getSimilarity(a, b, options = {}) {

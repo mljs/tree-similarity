@@ -6,7 +6,5 @@ export function treeSimilarity(A, B, options = {}) {
 }
 
 export function getFunction(options = {}) {
-    return (A, B) => {
-        return getSimilarity(A, B, options);
-    };
+    return (A, B) => getSimilarity(A, B, options);
 }
