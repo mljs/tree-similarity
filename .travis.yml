@@ -1,6 +1,8 @@
 language: node_js
 node_js:
-  - node
-  - lts/boron #v6
-  - lts/argon #v4
-sudo: false
+  - 8
+  - 6
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
+script:
+  - npm run test-travis
