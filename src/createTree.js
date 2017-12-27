@@ -1,5 +1,5 @@
 import binarySearch from 'binary-search';
-import {asc} from 'num-sort';
+import {asc, desc} from 'num-sort';
 
 /**
  * Function that creates the tree
@@ -11,23 +11,32 @@ import {asc} from 'num-sort';
  */
 export function createTree(spectrum, options = {}) {
     var X = spectrum[0];
-    const {
+    var {
         minWindow = 0.16,
         threshold = 0.01,
         from = X[0],
         to = X[X.length - 1]
     } = options;
 
-    return mainCreateTree(spectrum[0], spectrum[1], from, to, minWindow, threshold);
+    if (X[0] > X[1]) {
+        if (from < to) [from, to] = [to, from];
+    } else if (from > to) {
+        [from, to] = [to, from];
+    }
+    var comparator = from > to ? desc : asc;
+
+    return mainCreateTree(spectrum[0], spectrum[1], from, to, minWindow, threshold, comparator);
 }
 
-function mainCreateTree(X, Y, from, to, minWindow, threshold) {
-    if ((to - from) < minWindow) {
+function mainCreateTree(X, Y, from, to, minWindow, threshold, comparator) {
+
+    if (Math.abs(to - from) < minWindow) {
         return null;
     }
 
     // search first point
-    var start = binarySearch(X, from, asc);
+    var start = binarySearch(X, from, comparator);
+
     if (start < 0) {
         start = ~start;
     }
@@ -36,7 +45,7 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
     var sum = 0;
     var center = 0;
     for (var i = start; i < X.length; i++) {
-        if (X[i] >= to) {
+        if (comparator(X[i], to) >= 0) {
             break;
         }
         sum += Y[i];
@@ -48,19 +57,20 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
     }
 
     center /= sum;
-    if (((center - from) < 1e-6) || ((to - center) < 1e-6)) {
+
+    if ((comparator(center, from) < 1e-6) || (comparator(to, center) < 1e-6)) {
         return null;
     }
-    if ((center - from) < (minWindow / 4)) {
-        return mainCreateTree(X, Y, center, to, minWindow, threshold);
+    if (comparator(center, from) < (minWindow / 4)) {
+        return mainCreateTree(X, Y, center, to, minWindow, threshold, comparator);
     } else {
-        if ((to - center) < (minWindow / 4)) {
-            return mainCreateTree(X, Y, from, center, minWindow, threshold);
+        if (comparator(to, center) < (minWindow / 4)) {
+            return mainCreateTree(X, Y, from, center, minWindow, threshold, comparator);
         } else {
             return new Tree(
                 sum, center,
-                mainCreateTree(X, Y, from, center, minWindow, threshold),
-                mainCreateTree(X, Y, center, to, minWindow, threshold)
+                mainCreateTree(X, Y, from, center, minWindow, threshold, comparator),
+                mainCreateTree(X, Y, center, to, minWindow, threshold, comparator)
             );
         }
     }
