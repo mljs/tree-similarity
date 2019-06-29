@@ -1,3 +1,17 @@
+# [1.0.0](https://github.com/mljs/tree-similarity/compare/v0.1.0...v1.0.0) (2019-06-29)
+
+
+### chore
+
+* update dependencies and remove support for Node.js 6 ([e8ad736](https://github.com/mljs/tree-similarity/commit/e8ad736))
+
+
+### BREAKING CHANGES
+
+* Node.js 6 is no longer supported.
+
+
+
 <a name="0.1.0"></a>
 # 0.1.0 (2017-08-10)
 
