@@ -31,6 +31,7 @@
   "homepage": "https://github.com/mljs/tree-similarity#readme",
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
     "eslint-config-cheminfo": "^9.1.1",
     "prettier": "^3.2.5",
