@@ -14,8 +14,8 @@
     "eslint-fix": "npm run eslint -- --fix",
     "prepublishOnly": "npm run compile",
     "test": "npm run test-coverage && npm run eslint",
-    "test-only": "vitest --globals",
-    "test-coverage": "vitest --globals --coverage"
+    "test-only": "vitest",
+    "test-coverage": "vitest --coverage"
   },
   "repository": {
     "type": "git",
