@@ -1,7 +1,15 @@
+import { describe, it, expect } from 'vitest';
+
 import { treeSimilarity, getFunction } from '..';
 
-var a = [[1, 2, 3, 4, 5, 6, 7], [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3]];
-var b = [[1, 2, 3, 4, 5, 6, 7], [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3]];
+let a = [
+  [1, 2, 3, 4, 5, 6, 7],
+  [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3],
+];
+let b = [
+  [1, 2, 3, 4, 5, 6, 7],
+  [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3],
+];
 
 describe('Tree similarity', () => {
   it('should work with two arrays', () => {
@@ -9,12 +17,12 @@ describe('Tree similarity', () => {
   });
 
   it('should currify the options', () => {
-    var options = {
+    let options = {
       alpha: 0.4,
       beta: 0.5,
-      gamma: 0.001
+      gamma: 0.001,
     };
-    var func = getFunction(options);
+    let func = getFunction(options);
     expect(func(a, b)).toBe(treeSimilarity(a, b, options));
   });
 });
