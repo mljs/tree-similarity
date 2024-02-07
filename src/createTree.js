@@ -1,5 +1,5 @@
 import binarySearch from 'binary-search';
-import { ascending } from 'num-sort';
+import { numberSortAscending } from 'num-sort';
 
 /**
  * Function that creates the tree
@@ -34,7 +34,7 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
   }
 
   // search first point
-  var start = binarySearch(X, from, ascending);
+  var start = binarySearch(X, from, numberSortAscending);
   if (start < 0) {
     start = ~start;
   }
