@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 
-import { treeSimilarity, getFunction } from "..";
+import { treeSimilarity, getFunction } from '..';
 
 let a = [
   [1, 2, 3, 4, 5, 6, 7],
@@ -11,12 +11,12 @@ let b = [
   [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3],
 ];
 
-describe("Tree similarity", () => {
-  it("should work with two arrays", () => {
+describe('Tree similarity', () => {
+  it('should work with two arrays', () => {
     expect(treeSimilarity(a, b)).toBeCloseTo(0.653354, 4);
   });
 
-  it("should currify the options", () => {
+  it('should currify the options', () => {
     let options = {
       alpha: 0.4,
       beta: 0.5,

@@ -15,7 +15,7 @@ export function createTree(spectrum, options = {}) {
     minWindow = 0.16,
     threshold = 0.01,
     from = X[0],
-    to = X[X.length - 1]
+    to = X[X.length - 1],
   } = options;
 
   return mainCreateTree(
@@ -24,7 +24,7 @@ export function createTree(spectrum, options = {}) {
     from,
     to,
     minWindow,
-    threshold
+    threshold,
   );
 }
 
@@ -61,15 +61,15 @@ function mainCreateTree(X, Y, from, to, minWindow, threshold) {
   if (center - from < minWindow / 4) {
     return mainCreateTree(X, Y, center, to, minWindow, threshold);
   } else if (to - center < minWindow / 4) {
-      return mainCreateTree(X, Y, from, center, minWindow, threshold);
-    } else {
-      return new Tree(
-        sum,
-        center,
-        mainCreateTree(X, Y, from, center, minWindow, threshold),
-        mainCreateTree(X, Y, center, to, minWindow, threshold)
-      );
-    }
+    return mainCreateTree(X, Y, from, center, minWindow, threshold);
+  } else {
+    return new Tree(
+      sum,
+      center,
+      mainCreateTree(X, Y, from, center, minWindow, threshold),
+      mainCreateTree(X, Y, center, to, minWindow, threshold),
+    );
+  }
 }
 
 class Tree {

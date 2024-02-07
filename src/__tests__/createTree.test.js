@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 
-import { createTree } from "../createTree";
+import { createTree } from '../createTree';
 
-describe("simple trees", () => {
-  it("two peaks, same height", () => {
+describe('simple trees', () => {
+  it('two peaks, same height', () => {
     let x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let y = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
     let tree = createTree([x, y]);
@@ -24,7 +24,7 @@ describe("simple trees", () => {
     expect(right.right).toStrictEqual(null);
   });
 
-  it("two peaks, same height (higher)", () => {
+  it('two peaks, same height (higher)', () => {
     let x = new Array(101);
     let y = new Array(101);
     for (let i = 0; i < 101; i++) {
