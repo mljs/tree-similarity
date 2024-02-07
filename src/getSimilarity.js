@@ -20,7 +20,7 @@ export function getSimilarity(a, b, options = {}) {
     b = createTree(b);
   }
 
-  var C =
+  const C =
     (alpha * Math.min(a.sum, b.sum)) / Math.max(a.sum, b.sum) +
     (1 - alpha) * Math.exp(-gamma * Math.abs(a.center - b.center));
 
