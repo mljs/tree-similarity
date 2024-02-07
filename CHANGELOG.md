@@ -1,3 +1,5 @@
+# Changelog
+
 # [1.0.0](https://github.com/mljs/tree-similarity/compare/v0.1.0...v1.0.0) (2019-06-29)
 
 
