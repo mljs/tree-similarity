@@ -1,8 +1,12 @@
 /**
+ * @typedef {import("../types").Tree} Tree
+ * @typedef {import("../types").TreeSimilarityOptions} TreeSimilarityOptions
+ */
+/**
  * Similarity between two nodes
- * @param {Tree|null} a - tree A node
- * @param {Tree|null} b - tree B node
- * @param {object} [options]
+ * @param {Tree | null} a - tree A node
+ * @param {Tree | null} b - tree B node
+ * @param {TreeSimilarityOptions} [options]
  * @return {number} similarity measure between tree nodes
  */
 export function treeSimilarity(a, b, options = {}) {

@@ -2,12 +2,16 @@ import binarySearch from 'binary-search';
 import { numberSortAscending } from 'num-sort';
 
 /**
+ * @typedef {import("../types").Tree} Tree
+ * @typedef {import("../types").CreateTreeOptions} CreateTreeOptions
+ * @typedef {import("../types").Spectrum} Spectrum
+ */
+
+/**
  * Function that creates the tree
- * @param {object} spectrum
- * @param {object} [options]
- * @return {Tree|null}
- * left and right have the same structure than the parent,
- * or are null if they are leaves
+ * @param {Spectrum} spectrum
+ * @param {CreateTreeOptions} [options]
+ * @return { Tree | null }
  */
 export function createTree(spectrum, options = {}) {
   const { x, y } = spectrum;
