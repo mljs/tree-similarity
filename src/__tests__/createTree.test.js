@@ -6,7 +6,7 @@ describe('simple trees', () => {
   it('two peaks, same height', () => {
     let x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     let y = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
-    let tree = createTree([x, y]);
+    let tree = createTree({ x, y });
 
     expect(tree.center).toBe(5);
     expect(tree.sum).toBe(2);
@@ -34,7 +34,7 @@ describe('simple trees', () => {
     y[20] = 20;
     y[80] = 20;
 
-    let tree = createTree([x, y]);
+    let tree = createTree({ x, y });
 
     expect(tree.center).toBe(50);
     expect(tree.sum).toBe(40);
