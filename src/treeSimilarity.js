@@ -1,12 +1,16 @@
 /**
  * Similarity between two nodes
- * @param {Tree} a - tree A node
- * @param {Tree} b - tree B node
- * @param {Record<string>} [options]
+ * @param {Tree|null} a - tree A node
+ * @param {Tree|null} b - tree B node
+ * @param {object} [options]
  * @return {number} similarity measure between tree nodes
  */
 export function treeSimilarity(a, b, options = {}) {
   const { alpha = 0.1, beta = 0.33, gamma = 0.001 } = options;
+
+  if (a === null || b === null) {
+    return 0;
+  }
 
   if (!isTree(a) || !isTree(b)) {
     throw new Error('tree similarity expects tree as inputs');
