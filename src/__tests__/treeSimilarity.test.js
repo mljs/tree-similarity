@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { createTree } from '../createTree';
-import { getSimilarity } from '../getSimilarity';
+import { treeSimilarity } from '../treeSimilarity';
 
 describe('simple trees', () => {
   it('same tree', () => {
@@ -10,6 +10,6 @@ describe('simple trees', () => {
     let tree1 = createTree([x, y]);
     let tree2 = createTree([x, y]);
 
-    expect(getSimilarity(tree1, tree2, { beta: 1 })).toBe(1);
+    expect(treeSimilarity(tree1, tree2, { beta: 1 })).toBe(1);
   });
 });

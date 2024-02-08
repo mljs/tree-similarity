@@ -7,7 +7,7 @@ import { createTree } from './createTree';
  * @param {object} [options]
  * @return {number} similarity measure between tree nodes
  */
-export function getSimilarity(a, b, options = {}) {
+export function treeSimilarity(a, b, options = {}) {
   const { alpha = 0.1, beta = 0.33, gamma = 0.001 } = options;
 
   if (a === null || b === null) {
@@ -27,8 +27,8 @@ export function getSimilarity(a, b, options = {}) {
   return (
     beta * C +
     ((1 - beta) *
-      (getSimilarity(a.left, b.left, options) +
-        getSimilarity(a.right, b.right, options))) /
+      (treeSimilarity(a.left, b.left, options) +
+        treeSimilarity(a.right, b.right, options))) /
       2
   );
 }
