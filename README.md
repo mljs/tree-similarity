@@ -15,15 +15,21 @@ Compares two spectra using a tree similarity.
 ```js
 import { createTree, treeSimilarity } from 'ml-tree-similarity';
 
-const a = [[1, 2, 3, 4, 5, 6, 7], [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3]];
-const b = [[1, 2, 3, 4, 5, 6, 7], [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3]];
+const a = {
+  x: [1, 2, 3, 4, 5, 6, 7],
+  y: [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3],
+};
+const b = {
+  x: [1, 2, 3, 4, 5, 6, 7],
+  y: [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3],
+};
 
 // create a tree
 const options = { from: 1, to: 7 };
-const A = createTree(a, options);
+const aTree = createTree(a, options);
+const bTree = createTree(b, options);
 
-// a pre-calculated tree is also a valid input
-const ans = treeSimilarity(A, b, options);
+const ans = treeSimilarity(aTree, bTree, options);
 ```
 
 ## [API Documentation](https://mljs.github.io/tree-similarity/)
