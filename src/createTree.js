@@ -1,10 +1,9 @@
 import binarySearch from 'binary-search';
-import { numberSortAscending } from 'num-sort';
 
 /**
- * @typedef {import("../types").Tree} Tree
- * @typedef {import("../types").CreateTreeOptions} CreateTreeOptions
- * @typedef {import("../types").Spectrum} Spectrum
+ * @typedef {import("../tree-similarity").Tree} Tree
+ * @typedef {import("../tree-similarity").CreateTreeOptions} CreateTreeOptions
+ * @typedef {import("../tree-similarity").Spectrum} Spectrum
  */
 
 /**
@@ -31,7 +30,7 @@ function mainCreateTree(x, y, from, to, minWindow, threshold) {
   }
 
   // search first point
-  let start = binarySearch(x, from, numberSortAscending);
+  let start = binarySearch(x, from, (a, b) => a - b);
   if (start < 0) {
     start = ~start;
   }

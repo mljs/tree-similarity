@@ -1,6 +1,6 @@
 /**
- * @typedef {import("../types").Tree} Tree
- * @typedef {import("../types").TreeSimilarityOptions} TreeSimilarityOptions
+ * @typedef {import("../tree-similarity").Tree} Tree
+ * @typedef {import("../tree-similarity").TreeSimilarityOptions} TreeSimilarityOptions
  */
 /**
  * Similarity between two nodes
