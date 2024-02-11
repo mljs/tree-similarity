@@ -4,5 +4,5 @@ export default {
     format: 'cjs',
     file: 'lib/index.js'
   },
-  external: ['binary-search', 'num-sort']
+  external: ['binary-search']
 };

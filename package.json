@@ -4,9 +4,11 @@
   "description": "Compares two spectra using a tree similarity",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "tree-similarity.d.ts",
   "files": [
     "lib",
-    "src"
+    "src",
+    "tree-similarity.d.ts"
   ],
   "scripts": {
     "compile": "rollup -c",
@@ -40,7 +42,6 @@
   },
   "dependencies": {
     "binary-search": "^1.3.6",
-    "cheminfo-types": "^1.7.2",
-    "num-sort": "^3.0.0"
+    "cheminfo-types": "^1.7.2"
   }
 }
