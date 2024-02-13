@@ -1,4 +1,4 @@
-import { NumberArray } from "cheminfo-types";
+import { DataXY } from "cheminfo-types";
 
 export interface Tree {
   sum: number;
@@ -39,7 +39,19 @@ export interface TreeSimilarityOptions {
   beta?: number;
   gamma?: number;
 }
-export interface Spectrum {
-  x: NumberArray;
-  y: NumberArray;
-}
+
+export function createTree(
+  dataXY: DataXY,
+  options: CreateTreeOptions = {},
+): Tree
+
+export function treeSimilarity(
+  tree1: Tree,
+  tree2: Tree,
+  options: TreeSimilarityOptions = {},
+): number;
+  
+export function compressTree(
+  tree: Tree,
+  options: { fixed?: number }
+)
