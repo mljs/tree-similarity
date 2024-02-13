@@ -18,7 +18,7 @@ describe('Tree similarity', () => {
       4,
     );
   });
-  it('should throws', () => {
+  it('should throw with wrong input', () => {
     expect(() => treeSimilarity(createTree(a), {})).toThrow(
       'tree similarity expects tree as inputs',
     );
