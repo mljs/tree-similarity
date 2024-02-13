@@ -3,17 +3,18 @@ import binarySearch from 'binary-search';
 /**
  * @typedef {import("../tree-similarity").Tree} Tree
  * @typedef {import("../tree-similarity").CreateTreeOptions} CreateTreeOptions
- * @typedef {import("../tree-similarity").Spectrum} Spectrum
+ * @typedef {import("cheminfo-types").DataXY} DataXY
+ * @typedef {import("cheminfo-types").DoubleArray} DoubleArray
  */
 
 /**
  * Function that creates the tree
- * @param {Spectrum} spectrum
+ * @param {DataXY} dataXY
  * @param {CreateTreeOptions} [options]
  * @return { Tree | null }
  */
-export function createTree(spectrum, options = {}) {
-  const { x, y } = spectrum;
+export function createTree(dataXY, options = {}) {
+  const { x, y } = dataXY;
   const {
     minWindow = 0.16,
     threshold = 0.01,
@@ -23,6 +24,17 @@ export function createTree(spectrum, options = {}) {
 
   return mainCreateTree(x, y, from, to, minWindow, threshold);
 }
+
+/**
+ * recursive function to generate all the nodes in the tree
+ * @param {DoubleArray} x
+ * @param {DoubleArray} y
+ * @param {number} from
+ * @param {number} to
+ * @param {number} minWindow
+ * @param {number} threshold
+ * @returns {Tree | null}
+ */
 
 function mainCreateTree(x, y, from, to, minWindow, threshold) {
   if (to - from < minWindow) {
