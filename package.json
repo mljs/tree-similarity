@@ -1,6 +1,6 @@
 {
   "name": "ml-tree-similarity",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Compares two spectra using a tree similarity",
   "main": "lib/index.js",
   "module": "src/index.js",
