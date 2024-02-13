@@ -1,6 +1,9 @@
 /**
+ * @typedef {import("../tree-similarity").Tree} Tree
+ */
+/**
  * Destructive compression in which we reduce the number of decimals
- * @param {object} tree
+ * @param {Tree} tree
  * @param {object} [options={}]
  * @param {number} [options.fixed=undefined] - number of decimal ot keep
  * @returns
