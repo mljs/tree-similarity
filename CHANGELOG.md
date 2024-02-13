@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/mljs/tree-similarity/compare/v2.0.0...v2.1.0) (2024-02-13)
+
+
+### Features
+
+* add compressTree to reduce tree size ([c20c571](https://github.com/mljs/tree-similarity/commit/c20c571d7ac46d4a8a73f752e03a9d0f34dd57b6))
+
+
+### Bug Fixes
+
+* remove num-sort dep ([#14](https://github.com/mljs/tree-similarity/issues/14)) ([66fac3e](https://github.com/mljs/tree-similarity/commit/66fac3e9e7234485a4d5967d525f3de81eb684ff))
+
 ## [2.0.0](https://github.com/mljs/tree-similarity/compare/v1.0.0...v2.0.0) (2024-02-08)
 
 
