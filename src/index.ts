@@ -1,3 +1,3 @@
-export { treeSimilarity } from './treeSimilarity';
-export { createTree } from './createTree';
+export * from './treeSimilarity';
+export * from './createTree';
 export { compressTree } from './compressTree';
