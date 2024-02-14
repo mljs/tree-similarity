@@ -4,7 +4,7 @@ import { Tree } from './createTree';
  * Destructive compression in which we reduce the number of decimals
  */
 export function compressTree(
-  tree: Tree,
+  tree: Tree | null,
   options: {
     // number of decimal ot keep
     fixed?: number;
