@@ -2,23 +2,27 @@
   "name": "ml-tree-similarity",
   "version": "2.1.0",
   "description": "Compares two spectra using a tree similarity",
-  "main": "lib/index.js",
-  "module": "src/index.js",
-  "types": "tree-similarity.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib-esm/index.js",
+  "types": "./lib/index.d.ts",
   "files": [
     "lib",
     "src",
-    "tree-similarity.d.ts"
+    "lib-esm"
   ],
   "scripts": {
-    "compile": "rollup -c",
+    "check-types": "tsc --noEmit",
+    "clean": "rimraf lib lib-esm",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
-    "prepack": "npm run compile",
+    "prepack": "npm run tsc",
     "prettier": "prettier --check src",
     "prettier-write": "prettier --write src",
-    "test": "npm run test-only && npm run eslint && npm run prettier",
-    "test-only": "vitest run --coverage"
+    "test": "npm run test-only && npm run eslint && npm run prettier && npm run check-types",
+    "test-only": "vitest run --coverage",
+    "tsc": "npm run clean && npm run tsc-cjs && npm run tsc-esm",
+    "tsc-cjs": "tsc --project tsconfig.cjs.json",
+    "tsc-esm": "tsc --project tsconfig.esm.json"
   },
   "repository": {
     "type": "git",
@@ -33,11 +37,13 @@
   "homepage": "https://github.com/mljs/tree-similarity#readme",
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
     "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
-    "eslint-config-cheminfo": "^9.1.1",
+    "eslint-config-cheminfo-typescript": "^12.2.0",
     "prettier": "^3.2.5",
-    "rollup": "^4.9.6",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   },
   "dependencies": {
