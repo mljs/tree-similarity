@@ -1,4 +1,4 @@
-import { Tree } from "./createTree";
+import { Tree } from './createTree';
 
 export interface TreeSimilarityOptions {
   alpha?: number;
@@ -10,7 +10,11 @@ export interface TreeSimilarityOptions {
  * Similarity between two nodes
  * @return {number} similarity measure between tree nodes
  */
-export function treeSimilarity(treeA: Tree | null, treeB: Tree | null, options: TreeSimilarityOptions = {}) {
+export function treeSimilarity(
+  treeA: Tree | null,
+  treeB: Tree | null,
+  options: TreeSimilarityOptions = {},
+) {
   const { alpha = 0.1, beta = 0.33, gamma = 0.001 } = options;
 
   if (treeA === null || treeB === null) {
@@ -38,6 +42,6 @@ export function treeSimilarity(treeA: Tree | null, treeB: Tree | null, options: 
   );
 }
 
-function isTree(tree: object): tree is Tree  {
+function isTree(tree: object): tree is Tree {
   return ['sum', 'center', 'left', 'right'].every((key) => key in tree);
 }

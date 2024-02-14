@@ -1,12 +1,15 @@
-import { Tree } from "./createTree";
+import { Tree } from './createTree';
 
 /**
  * Destructive compression in which we reduce the number of decimals
  */
-export function compressTree(tree: Tree, options: { 
-  // number of decimal ot keep
-  fixed?: number 
-} = {}): Tree {
+export function compressTree(
+  tree: Tree,
+  options: {
+    // number of decimal ot keep
+    fixed?: number;
+  } = {},
+): Tree {
   const { fixed } = options;
   return JSON.parse(
     JSON.stringify(tree, (key, value) => {

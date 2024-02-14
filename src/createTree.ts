@@ -17,22 +17,22 @@ export interface CreateTreeOptions {
    * low limit of the tree
    * @default x[0]
    */
-  from?: number
+  from?: number;
   /**
    * high limit of the tree
    * @default x.at(-1)
    */
-  to?: number
+  to?: number;
   /**
    * minimal sum value to accept a node
-   * @default 0.01 
-   */ 
+   * @default 0.01
+   */
   threshold?: number;
   /**
    * minimal window width to create a node
    * @default 0.16
    */
-  minWindow?: number
+  minWindow?: number;
 }
 
 /**
