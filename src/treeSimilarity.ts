@@ -8,13 +8,13 @@ export interface TreeSimilarityOptions {
 
 /**
  * Similarity between two nodes
- * @return {number} similarity measure between tree nodes
+ * @return similarity measure between tree nodes
  */
 export function treeSimilarity(
   treeA: Tree | null,
   treeB: Tree | null,
   options: TreeSimilarityOptions = {},
-) {
+): number {
   const { alpha = 0.1, beta = 0.33, gamma = 0.001 } = options;
 
   if (treeA === null || treeB === null) {

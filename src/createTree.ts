@@ -37,10 +37,12 @@ export interface CreateTreeOptions {
 
 /**
  * Function that creates the tree
- * @return { Tree | null }
  */
 
-export function createTree(dataXY: DataXY, options: CreateTreeOptions = {}) {
+export function createTree(
+  dataXY: DataXY,
+  options: CreateTreeOptions = {},
+): Tree | null {
   const { x, y } = dataXY;
   const {
     minWindow = 0.16,
