@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "skipLibCheck": true,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
