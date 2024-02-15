@@ -1,19 +1,49 @@
 import binarySearch from 'binary-search';
+import { DataXY } from 'cheminfo-types';
 
-/**
- * @typedef {import("../tree-similarity").Tree} Tree
- * @typedef {import("../tree-similarity").CreateTreeOptions} CreateTreeOptions
- * @typedef {import("../tree-similarity").Spectrum} Spectrum
- */
+export interface Tree {
+  sum: number;
+  center: number;
+  /**
+   * left and right have the same structure than the parent,
+   * or are null if they are leaves
+   */
+  left: Tree | null;
+  right: Tree | null;
+}
+
+export interface CreateTreeOptions {
+  /**
+   * low limit of the tree
+   * @default x[0]
+   */
+  from?: number;
+  /**
+   * high limit of the tree
+   * @default x.at(-1)
+   */
+  to?: number;
+  /**
+   * minimal sum value to accept a node
+   * @default 0.01
+   */
+  threshold?: number;
+  /**
+   * minimal window width to create a node
+   * @default 0.16
+   */
+  minWindow?: number;
+}
 
 /**
  * Function that creates the tree
- * @param {Spectrum} spectrum
- * @param {CreateTreeOptions} [options]
- * @return { Tree | null }
  */
-export function createTree(spectrum, options = {}) {
-  const { x, y } = spectrum;
+
+export function createTree(
+  dataXY: DataXY,
+  options: CreateTreeOptions = {},
+): Tree | null {
+  const { x, y } = dataXY;
   const {
     minWindow = 0.16,
     threshold = 0.01,
@@ -30,7 +60,7 @@ function mainCreateTree(x, y, from, to, minWindow, threshold) {
   }
 
   // search first point
-  let start = binarySearch(x, from, (a, b) => a - b);
+  let start = binarySearch(x, from, (a: number, b: number) => a - b);
   if (start < 0) {
     start = ~start;
   }

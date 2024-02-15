@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { createTree, treeSimilarity } from '../index';
+import { Tree, createTree, treeSimilarity } from '../index';
 
 const a = {
   x: [1, 2, 3, 4, 5, 6, 7],
@@ -16,6 +16,11 @@ describe('Tree similarity', () => {
     expect(treeSimilarity(createTree(a), createTree(b))).toBeCloseTo(
       0.653354,
       4,
+    );
+  });
+  it('should throw with wrong input', () => {
+    expect(() => treeSimilarity(createTree(a), {} as Tree)).toThrow(
+      'tree similarity expects tree as inputs',
     );
   });
 });
