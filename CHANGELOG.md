@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/mljs/tree-similarity/compare/v2.1.0...v2.2.0) (2024-02-15)
+
+
+### Features
+
+* migrate to typescript ([#19](https://github.com/mljs/tree-similarity/issues/19)) ([6634fd0](https://github.com/mljs/tree-similarity/commit/6634fd0993af4bb4f2df67c475d27a78df57cdfb))
+
 ## [2.1.0](https://github.com/mljs/tree-similarity/compare/v2.0.0...v2.1.0) (2024-02-13)
 
 
