@@ -8,7 +8,10 @@ export interface TreeSimilarityOptions {
 
 /**
  * Similarity between two nodes
- * @return similarity measure between tree nodes
+ * @param treeA
+ * @param treeB
+ * @param options
+ * @returns similarity measure between tree nodes
  */
 export function treeSimilarity(
   treeA: Tree | null,

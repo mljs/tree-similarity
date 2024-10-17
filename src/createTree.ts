@@ -37,6 +37,8 @@ export interface CreateTreeOptions {
 
 /**
  * Function that creates the tree
+ * @param dataXY
+ * @param options
  */
 
 export function createTree(
@@ -48,7 +50,7 @@ export function createTree(
     minWindow = 0.16,
     threshold = 0.01,
     from = x[0],
-    to = x[x.length - 1],
+    to = x.at(-1) as number,
   } = options;
 
   return mainCreateTree(x, y, from, to, minWindow, threshold);
@@ -72,7 +74,7 @@ function mainCreateTree(x, y, from, to, minWindow, threshold) {
     if (x[i] >= to) {
       break;
     }
-    sum += y[i];
+    sum += y[i] as number;
     center += x[i] * y[i];
   }
 

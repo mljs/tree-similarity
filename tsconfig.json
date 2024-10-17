@@ -7,8 +7,8 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2020",
-    "noImplicitAny": false,
+    "target": "es2022",
+    "noImplicitAny": false
   },
   "include": ["./src/**/*"]
 }

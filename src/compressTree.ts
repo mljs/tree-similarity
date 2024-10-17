@@ -2,6 +2,9 @@ import { Tree } from './createTree';
 
 /**
  * Destructive compression in which we reduce the number of decimals
+ * @param tree
+ * @param options
+ * @param options.fixed
  */
 export function compressTree(
   tree: Tree,
