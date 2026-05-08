@@ -13,8 +13,6 @@ export interface TreeSimilarityOptions {
   depth?: number;
   /** if true use xMassCenterVectorSimilarity fast/approximate path */
   useXVectorSimilarity?: boolean;
-  /** passed to xMassCenterVectorSimilarity */
-  recenter?: boolean;
 }
 
 /**
@@ -32,7 +30,6 @@ export function similarity(
     gamma = 0.001,
     depth = 5,
     useXVectorSimilarity = false,
-    recenter = true,
   } = options;
 
   // null handling (matches original behavior for tree inputs)
@@ -40,9 +37,8 @@ export function similarity(
 
   const centersA = xyMassCenterVector(a, { depth });
   const centersB = xyMassCenterVector(b, { depth });
-  console.log(centersA, 'centersA');
-  const { integral: integralA } = getWeightedIntegral(a);
-  const { integral: integralB } = getWeightedIntegral(b);
+  const integralA = getWeightedIntegral(a);
+  const integralB = getWeightedIntegral(b);
 
   const size = centersA.length;
   const sumsA = computeSumsFromCenters(a, centersA, integralA, depth);
@@ -50,7 +46,6 @@ export function similarity(
 
   if (useXVectorSimilarity) {
     const massSim = xMassCenterVectorSimilarity(sumsA, sumsB, {
-      recenter,
       similarityFct: (u: number, v: number) => {
         if (!isFinite(u) || !isFinite(v)) return 0;
         if (u === 0 && v === 0) return 1;
@@ -60,7 +55,6 @@ export function similarity(
     });
 
     const centerSim = xMassCenterVectorSimilarity(centersA, centersB, {
-      recenter,
       similarityFct: (u: number, v: number) => {
         if (!isFinite(u) || !isFinite(v)) return 0;
         return Math.exp(-gamma * Math.abs(u - v));
@@ -104,29 +98,22 @@ export function similarity(
 
 function getWeightedIntegral(data: DataXY) {
   const { x, y } = data;
-  const weightedIntegral = new Float64Array(x.length);
   const integral = new Float64Array(x.length);
   // the first point, no points before
   const firstIntegration = (x[1] - x[0]) * y[0];
   let totalIntegration = firstIntegration;
   integral[0] = totalIntegration;
-  let totalWeightedIntegral = firstIntegration * x[0];
-  weightedIntegral[0] = totalWeightedIntegral;
   for (let i = 1; i < x.length - 1; i++) {
     const currentIntegration = ((x[i + 1] - x[i - 1]) * y[i]) / 2;
     const currentX = x[i];
     totalIntegration += currentIntegration;
     integral[i] = totalIntegration;
-    totalWeightedIntegral += currentIntegration * currentX;
-    weightedIntegral[i] = totalWeightedIntegral;
   }
   // the last point, no points after
   const lastIntegration = (x[x.length - 1] - x[x.length - 2]) * y[y.length - 1];
   totalIntegration += lastIntegration;
   integral[x.length - 1] = totalIntegration;
-  totalWeightedIntegral += lastIntegration * x[x.length - 1];
-  weightedIntegral[x.length - 1] = totalWeightedIntegral;
-  return { integral, weightedIntegral };
+  return integral;
 }
 
 function computeSumsFromCenters(
