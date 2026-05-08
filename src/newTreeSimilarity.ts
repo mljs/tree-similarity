@@ -10,10 +10,6 @@ export interface TreeSimilarityOptions {
    * Default: false (exact, per-node recursion parity).
    */
   useXVectorSimilarity?: boolean;
-  /**
-   * Passed to `xMassCenterVectorSimilarity` when `useXVectorSimilarity` is true.
-   */
-  recenter?: boolean;
 }
 
 /**
@@ -31,7 +27,6 @@ export function newTreeSimilarity(
     beta = 0.33,
     gamma = 0.001,
     useXVectorSimilarity = false,
-    recenter = true,
   } = options;
 
   if (treeA === null || treeB === null) {
@@ -61,7 +56,6 @@ export function newTreeSimilarity(
   if (useXVectorSimilarity) {
     // approximate aggregated similarity using xMassCenterVectorSimilarity
     const massSim = xMassCenterVectorSimilarity(sumsA, sumsB, {
-      recenter,
       similarityFct: (a: number, b: number) => {
         if (!isFinite(a) || !isFinite(b)) return 0;
         if (a === 0 && b === 0) return 1;
@@ -71,7 +65,6 @@ export function newTreeSimilarity(
     });
 
     const centerSim = xMassCenterVectorSimilarity(centersA, centersB, {
-      recenter,
       similarityFct: (a: number, b: number) => {
         if (!isFinite(a) || !isFinite(b)) return 0;
         return Math.exp(-gamma * Math.abs(a - b));
