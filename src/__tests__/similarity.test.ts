@@ -36,7 +36,6 @@ describe('similarity', () => {
 
     const s1 = similarity(a, b);
     const s2 = similarity(b, a);
-    console.log(s1);
     expect(s1).toBeCloseTo(s2);
   });
 });

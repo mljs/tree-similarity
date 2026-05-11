@@ -17,11 +17,7 @@ export function similarity(
   b: DataXY | null,
   options: TreeSimilarityOptions = {},
 ): number {
-  const {
-    alpha = 0.1,
-    gamma = 0.001,
-    depth = 5,
-  } = options;
+  const { alpha = 0.1, gamma = 0.001, depth = 5 } = options;
 
   // null handling (matches original behavior for tree inputs)
   if (a === null || b === null) return 0;
@@ -31,7 +27,6 @@ export function similarity(
   const integralA = getWeightedIntegral(a);
   const integralB = getWeightedIntegral(b);
 
-  const size = centersA.length;
   const sumsA = computeSumsFromCenters(a, centersA, integralA, depth);
   const sumsB = computeSumsFromCenters(b, centersB, integralB, depth);
 
@@ -73,7 +68,8 @@ function getWeightedIntegral(data: DataXY) {
     integral[i] = totalIntegration;
   }
   // the last point, no points after
-  const lastIntegration = (x.at(-1)! - x.at(-2)!) * y.at(-1)!;
+  const l = x.length - 1;
+  const lastIntegration = (x[l] - x[l - 1]) * y[l];
   totalIntegration += lastIntegration;
   integral[x.length - 1] = totalIntegration;
   return integral;

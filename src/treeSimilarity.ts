@@ -1,5 +1,3 @@
-import { xMassCenterVectorSimilarity } from 'ml-spectra-processing';
-
 import { Tree } from './createTree';
 
 export interface TreeSimilarityOptions {
@@ -91,19 +89,20 @@ function getTreeDepth(tree: Tree | null): number {
 }
 
 function fillArrays(
-  tree: Tree | null,
+  tree: Tree,
   index: number,
   centers: Float64Array,
   sums: Float64Array,
 ): void {
   const size = centers.length;
-  const stack: Array<{ node: Tree | null; idx: number }> = [];
+  const stack: Array<{ node: Tree; idx: number }> = [];
   stack.push({ node: tree, idx: index });
 
   while (stack.length > 0) {
-    const { node, idx } = stack.pop()!;
+    //@ts-expect-error stack is non-empty, so pop will return a value
+    const { node, idx } = stack.pop();
     if (idx >= size) continue;
-    if (node === null) {
+    if (!node) {
       centers[idx] = Number.NaN;
       sums[idx] = Number.NaN;
       continue;
