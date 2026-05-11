@@ -50,7 +50,7 @@ export function createTree(
     minWindow = 0.16,
     threshold = 0.01,
     from = x[0],
-    to = x.at(-1) as number,
+    to = x.at(-1),
   } = options;
 
   return mainCreateTree(x, y, from, to, minWindow, threshold);

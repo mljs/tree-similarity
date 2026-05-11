@@ -17,16 +17,6 @@ describe('similarity', () => {
     expect(sSame).toBeCloseTo(1);
   });
 
-  it('returns 1 for identical DataXY when useXVectorSimilarity is true', () => {
-    const x = [0, 1, 2, 3, 4];
-    const y = [1, 0, 2, 0, 1];
-    const data = { x, y };
-
-    expect(
-      similarity(data, data, { useXVectorSimilarity: true, depth: 3 }),
-    ).toBeCloseTo(1);
-  });
-
   it('returns 0 when either input is null', () => {
     const x = [0, 1];
     const y = [1, 2];
@@ -46,20 +36,7 @@ describe('similarity', () => {
 
     const s1 = similarity(a, b);
     const s2 = similarity(b, a);
+    console.log(s1);
     expect(s1).toBeCloseTo(s2);
-  });
-
-  it('old test case', () => {
-    const a = {
-      x: [1, 2, 3, 4, 5, 6, 7],
-      y: [0.3, 0.7, 4, 0.3, 0.2, 5, 0.3],
-    };
-    const b = {
-      x: [1, 2, 3, 4, 5, 6, 7],
-      y: [0.3, 4, 0.7, 0.3, 5, 0.2, 0.3],
-    };
-    expect(
-      similarity(a, b, { useXVectorSimilarity: false, depth: 3 }),
-    ).toBeCloseTo(0.67, 1);
   });
 });

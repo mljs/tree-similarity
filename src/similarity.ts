@@ -7,18 +7,11 @@ import {
 
 export interface TreeSimilarityOptions {
   alpha?: number;
-  beta?: number;
   gamma?: number;
   /** depth used by `xyMassCenterVector` when inputs are `DataXY` */
   depth?: number;
-  /** if true use xMassCenterVectorSimilarity fast/approximate path */
-  useXVectorSimilarity?: boolean;
 }
 
-/**
- * - If given `DataXY` objects, it builds center/mass vectors (via `xyMassCenterVector`) and
- *   computes per-node sums to reproduce the original alpha/beta/gamma aggregation (exact parity).
- */
 export function similarity(
   a: DataXY | null,
   b: DataXY | null,
@@ -26,10 +19,8 @@ export function similarity(
 ): number {
   const {
     alpha = 0.1,
-    beta = 0.33,
     gamma = 0.001,
     depth = 5,
-    useXVectorSimilarity = false,
   } = options;
 
   // null handling (matches original behavior for tree inputs)
@@ -44,60 +35,33 @@ export function similarity(
   const sumsA = computeSumsFromCenters(a, centersA, integralA, depth);
   const sumsB = computeSumsFromCenters(b, centersB, integralB, depth);
 
-  if (useXVectorSimilarity) {
-    const massSim = xMassCenterVectorSimilarity(sumsA, sumsB, {
-      similarityFct: (u: number, v: number) => {
-        if (!isFinite(u) || !isFinite(v)) return 0;
-        if (u === 0 && v === 0) return 1;
-        if (u === 0 || v === 0) return 0;
-        return Math.min(u, v) / Math.max(u, v);
-      },
-    });
+  const massSim = xMassCenterVectorSimilarity(sumsA, sumsB, {
+    similarityFct: (u: number, v: number) => {
+      if (!Number.isFinite(u) || !Number.isFinite(v)) return 0;
+      if (u === 0 && v === 0) return 1;
+      if (u === 0 || v === 0) return 0;
+      return Math.min(u, v) / Math.max(u, v);
+    },
+  });
 
-    const centerSim = xMassCenterVectorSimilarity(centersA, centersB, {
-      similarityFct: (u: number, v: number) => {
-        if (!isFinite(u) || !isFinite(v)) return 0;
-        return Math.exp(-gamma * Math.abs(u - v));
-      },
-    });
+  const centerSim = xMassCenterVectorSimilarity(centersA, centersB, {
+    similarityFct: (u: number, v: number) => {
+      if (!Number.isFinite(u) || !Number.isFinite(v)) return 0;
+      return Math.exp(-gamma * Math.abs(u - v));
+    },
+  });
 
-    return alpha * massSim + (1 - alpha) * centerSim;
-  }
-
-  // exact parity aggregation (bottom-up)
-  const S = new Float64Array(size).fill(0);
-  for (let i = size - 1; i >= 0; i--) {
-    const aSum = sumsA[i];
-    const bSum = sumsB[i];
-
-    if (!isFinite(aSum) || !isFinite(bSum)) {
-      S[i] = 0;
-      continue;
-    }
-
-    if (aSum === 0 && bSum === 0) {
-      S[i] = 1;
-      continue;
-    }
-
-    const aCenter = centersA[i];
-    const bCenter = centersB[i];
-    const C =
-      (alpha * Math.min(aSum, bSum)) / Math.max(aSum, bSum) +
-      (1 - alpha) * Math.exp(-gamma * Math.abs(aCenter - bCenter));
-
-    const left = 2 * i + 1;
-    const right = left + 1;
-    const sl = left < size ? S[left] : 0;
-    const sr = right < size ? S[right] : 0;
-    S[i] = beta * C + ((1 - beta) * (sl + sr)) / 2;
-  }
-
-  return S[0];
+  return alpha * massSim + (1 - alpha) * centerSim;
 }
 
 function getWeightedIntegral(data: DataXY) {
   const { x, y } = data;
+
+  if (x.length < 2 || y.length < 2) {
+    throw new Error(
+      'Input DataXY must have at least two points in x and y arrays.',
+    );
+  }
   const integral = new Float64Array(x.length);
   // the first point, no points before
   const firstIntegration = (x[1] - x[0]) * y[0];
@@ -105,12 +69,11 @@ function getWeightedIntegral(data: DataXY) {
   integral[0] = totalIntegration;
   for (let i = 1; i < x.length - 1; i++) {
     const currentIntegration = ((x[i + 1] - x[i - 1]) * y[i]) / 2;
-    const currentX = x[i];
     totalIntegration += currentIntegration;
     integral[i] = totalIntegration;
   }
   // the last point, no points after
-  const lastIntegration = (x[x.length - 1] - x[x.length - 2]) * y[y.length - 1];
+  const lastIntegration = (x.at(-1)! - x.at(-2)!) * y.at(-1)!;
   totalIntegration += lastIntegration;
   integral[x.length - 1] = totalIntegration;
   return integral;
