@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ml-tree-similarity explorer</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 16px;
+        color: #222;
+      }
+      h1 {
+        font-size: 18px;
+      }
+      .hint {
+        color: #666;
+        font-size: 12px;
+        margin: 4px 0 12px;
+      }
+      table.matrix {
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+      table.matrix th {
+        padding: 2px 4px;
+        font-weight: 500;
+        text-align: center;
+      }
+      table.matrix th.rowlabel {
+        text-align: right;
+        white-space: nowrap;
+      }
+      table.matrix td.cell {
+        width: 36px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #fff;
+      }
+      table.matrix td.cell.selected {
+        outline: 2px solid #d33;
+        outline-offset: -2px;
+        font-weight: 700;
+      }
+      #plots {
+        margin-top: 16px;
+      }
+      .pair-info {
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      .pair-info b {
+        font-variant-numeric: tabular-nums;
+      }
+      .plot {
+        margin-bottom: 6px;
+      }
+      svg {
+        background: #fafafa;
+        border: 1px solid #ddd;
+        touch-action: none;
+        user-select: none;
+      }
+      .spectrum {
+        fill: rgba(30, 120, 200, 0.15);
+        stroke: #1e78c8;
+        stroke-width: 1;
+      }
+      .baseline {
+        stroke: #ccc;
+        stroke-width: 1;
+      }
+      .edge {
+        fill: none;
+        stroke: #e08000;
+        stroke-width: 1.2;
+      }
+      .node {
+        fill: #e08000;
+      }
+      .guide {
+        stroke: rgba(224, 128, 0, 0.15);
+        stroke-width: 1;
+      }
+      .sel {
+        fill: rgba(210, 50, 50, 0.15);
+        stroke: #d33;
+        stroke-width: 1;
+      }
+      .title {
+        font-size: 11px;
+        fill: #444;
+      }
+      .tick {
+        fill: #999;
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ml-tree-similarity explorer</h1>
+    <p class="hint">
+      Click a matrix cell to compare two spectra. On the plots: drag to zoom X
+      (synchronized), double-click to reset, scroll wheel to zoom Y. The orange
+      tree is the center-of-mass tree built by <code>createTree</code>.
+    </p>
+    <div id="matrix"></div>
+    <div id="plots"></div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

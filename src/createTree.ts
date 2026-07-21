@@ -1,5 +1,6 @@
 import binarySearch from 'binary-search';
 import type { DataXY, NumberArray } from 'cheminfo-types';
+import { xySortX } from 'ml-spectra-processing';
 
 export interface Tree {
   sum: number;
@@ -36,15 +37,18 @@ export interface CreateTreeOptions {
 }
 
 /**
- * Function that creates the tree
- * @param dataXY
- * @param options
+ * Creates the binary tree that represents a spectrum.
+ * The points are sorted by x with `xySortX`, so spectra stored with a
+ * decreasing x, as usual for NMR ppm, are handled.
+ * @param dataXY - object with x (chemical shifts) and y (intensities) arrays.
+ * @param options - creation options.
+ * @returns the root of the tree, or null when no node could be created.
  */
 export function createTree(
   dataXY: DataXY,
   options: CreateTreeOptions = {},
 ): Tree | null {
-  const { x, y } = dataXY;
+  const { x, y } = xySortX(dataXY);
   const { minWindow = 0.16, threshold = 0.01 } = options;
   const from = options.from ?? x[0] ?? 0;
   const to = options.to ?? x.at(-1) ?? 0;

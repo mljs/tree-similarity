@@ -43,6 +43,51 @@ import { compressTree } from 'ml-tree-similarity';
 const compact = compressTree(aTree, { fixed: 3 });
 ```
 
+## How it works
+
+Each spectrum is encoded as a **binary tree of centers of mass**: every node stores
+the integral (`sum`) and the intensity-weighted mean position (`center`) of a
+sub-region, and each region is split at its center of mass. Noisy and empty regions
+are pruned, so the method needs **no peak picking and no pre-treatment**. Two trees
+are then compared with a recursive, shift-insensitive similarity.
+
+`createTree` always normalizes the x axis to be **strictly increasing** first:
+spectra stored with decreasing ppm (as usual for NMR) are reversed, then run through
+`xyEnsureGrowingX`. So descending JCAMP spectra can be passed in directly.
+
+### `createTree` options
+
+| option      | default    | meaning                                                       |
+| ----------- | ---------- | ------------------------------------------------------------- |
+| `threshold` | `0.01`     | minimum integral (Σy) for a node to be created (prunes noise) |
+| `minWindow` | `0.16`     | minimum sub-region width, in x units (e.g. ppm)               |
+| `from`      | `x[0]`     | lower x bound of the tree                                     |
+| `to`        | `x.at(-1)` | upper x bound of the tree                                     |
+
+### `treeSimilarity` options
+
+| option  | default | meaning                                             |
+| ------- | ------- | --------------------------------------------------- |
+| `alpha` | `0.1`   | weight of the intensity match vs. the shift match   |
+| `beta`  | `0.33`  | weight of a node vs. its children (shift tolerance) |
+| `gamma` | `0.001` | decay of the shift penalty `exp(−γ·\|Δcenter\|)`    |
+
+> **Note:** the raw similarity is **not** self-normalized (`treeSimilarity(a, a) ≠ 1`).
+> For a comparable measure divide by `sqrt(s(a,a) · s(b,b))`.
+
+**See [docs/algorithm.md](./docs/algorithm.md)** for the full method, its mapping to the
+original paper, the noise / center-of-mass trade-off, reproducibility findings, and the
+list of known limitations and planned improvements.
+
+## Development
+
+- `npm test` — unit tests, type-check, lint and format.
+- `npm run dev` — an interactive **explorer**: a similarity matrix over every spectrum in
+  `src/__tests__/data/`, with the two selected spectra and their trees, and synchronized
+  zoom (drag to zoom X, double-click to reset, scroll wheel to zoom Y).
+- `npm run generate-data` — regenerate the synthetic JCAMP-DX test spectra (DIFDUP
+  compressed) used by the tests and the explorer.
+
 ## [API Documentation](https://mljs.github.io/tree-similarity/)
 
 This algorithm was based in the following papers:

@@ -13,8 +13,10 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "clean": "rimraf coverage lib",
+    "dev": "vite --config scripts/vite.config.ts",
     "eslint": "eslint .",
     "eslint-fix": "eslint . --fix",
+    "generate-data": "node scripts/generateData.ts",
     "prepack": "npm run tsc",
     "prettier": "prettier --check .",
     "prettier-write": "prettier --write .",
@@ -36,17 +38,22 @@
   "homepage": "https://github.com/mljs/tree-similarity#readme",
   "dependencies": {
     "binary-search": "^1.3.6",
-    "cheminfo-types": "^1.15.0"
+    "cheminfo-types": "^1.15.0",
+    "ml-spectra-processing": "^14.29.4"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "@vitest/coverage-v8": "^4.1.10",
     "@zakodium/tsconfig": "^1.0.5",
+    "convert-to-jcamp": "^7.0.1",
     "eslint": "^9.39.5",
     "eslint-config-cheminfo-typescript": "^22.1.0",
+    "jcampconverter": "^12.5.2",
     "prettier": "^3.9.6",
     "rimraf": "^6.1.3",
+    "spectrum-generator": "^8.2.1",
     "typescript": "^6.0.3",
+    "vite": "^8.1.5",
     "vitest": "^4.1.10"
   }
 }
