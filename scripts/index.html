@@ -28,8 +28,18 @@
         text-align: center;
       }
       table.matrix th.rowlabel {
-        text-align: right;
+        text-align: left;
         white-space: nowrap;
+        padding-left: 8px;
+        cursor: pointer;
+      }
+      table.matrix th.col {
+        cursor: pointer;
+      }
+      table.matrix th.rowlabel.selected {
+        outline: 2px solid #d33;
+        outline-offset: -2px;
+        font-weight: 700;
       }
       table.matrix td.cell {
         width: 36px;
@@ -41,6 +51,25 @@
         outline: 2px solid #d33;
         outline-offset: -2px;
         font-weight: 700;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        margin: 0 0 10px;
+        font-size: 12px;
+        color: #444;
+      }
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .legend-swatch {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
       }
       #plots {
         margin-top: 16px;
@@ -70,6 +99,21 @@
         stroke: #ccc;
         stroke-width: 1;
       }
+      .zero {
+        stroke: #f5c400;
+        stroke-width: 1.5;
+      }
+      .ygrid {
+        stroke: #eee;
+        stroke-width: 1;
+      }
+      .ytick {
+        fill: #999;
+        font-size: 10px;
+      }
+      .ytick.zero-label {
+        fill: #b58900;
+      }
       .edge {
         fill: none;
         stroke: #e08000;
@@ -95,17 +139,94 @@
         fill: #999;
         font-size: 10px;
       }
+      .muted {
+        color: #888;
+        font-weight: 400;
+      }
+      #board {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      #stats {
+        max-width: 340px;
+        font-size: 12px;
+      }
+      .stats-title {
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+      .stats-sub {
+        color: #666;
+        margin-bottom: 8px;
+        line-height: 1.35;
+      }
+      table.stats-table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      table.stats-table th,
+      table.stats-table td {
+        padding: 2px 6px;
+        text-align: right;
+        border-bottom: 1px solid #eee;
+      }
+      table.stats-table tr th:first-child,
+      table.stats-table td.s-name {
+        text-align: left;
+        white-space: nowrap;
+      }
+      table.stats-table td.s-num {
+        font-variant-numeric: tabular-nums;
+      }
+      table.stats-table tr.stats-mean th,
+      table.stats-table tr.stats-mean td {
+        border-top: 2px solid #bbb;
+        border-bottom: none;
+        font-weight: 700;
+      }
+      #tooltip {
+        position: fixed;
+        display: none;
+        z-index: 10;
+        max-width: 280px;
+        padding: 7px 9px;
+        border-radius: 5px;
+        background: #263238;
+        color: #eceff1;
+        font-size: 12px;
+        line-height: 1.35;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+      }
+      #tooltip .tt-title {
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+      #tooltip .tt-file {
+        color: #90a4ae;
+        font-size: 11px;
+        margin-bottom: 4px;
+      }
     </style>
   </head>
   <body>
     <h1>ml-tree-similarity explorer</h1>
     <p class="hint">
-      Click a matrix cell to compare two spectra. On the plots: drag to zoom X
-      (synchronized), double-click to reset, scroll wheel to zoom Y. The orange
-      tree is the center-of-mass tree built by <code>createTree</code>.
+      Click a matrix cell to compare two spectra, or click a spectrum name (or
+      column number) to view it alone. Hover a name for its description. On the
+      plots: drag to zoom X (synchronized), double-click to reset, scroll wheel
+      to zoom Y. The orange tree is the center-of-mass tree built by
+      <code>createTree</code>; the yellow line marks zero intensity.
     </p>
-    <div id="matrix"></div>
+    <div id="board">
+      <div id="matrix"></div>
+      <div id="stats"></div>
+    </div>
     <div id="plots"></div>
+    <div id="tooltip"></div>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
