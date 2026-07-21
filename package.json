@@ -1,6 +1,6 @@
 {
   "name": "ml-tree-similarity",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Compares two spectra using a tree similarity",
   "type": "module",
   "exports": {
