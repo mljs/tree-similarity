@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.0](https://github.com/mljs/tree-similarity/compare/v2.2.0...v2.3.0) (2026-07-21)
+
+
+### Features
+
+* expand benchmark spectra and add explorer quality statistics ([efb126a](https://github.com/mljs/tree-similarity/commit/efb126ad14c08d5a42edf766167577fbec82a367))
+* migrate to ESM and current tooling standards ([51e0923](https://github.com/mljs/tree-similarity/commit/51e092351e9c42855b8e3e23dbda5a70a7c9c6c7))
+* sort spectra by x and add similarity test suite + debug tooling ([7a5e570](https://github.com/mljs/tree-similarity/commit/7a5e570672dbc8584ca01ec2cb2034015d46b47d))
+
 ## [2.2.0](https://github.com/mljs/tree-similarity/compare/v2.1.0...v2.2.0) (2024-02-15)
 
 
