@@ -1,3 +1,3 @@
-export * from './treeSimilarity';
-export * from './createTree';
-export { compressTree } from './compressTree';
+export * from './treeSimilarity.ts';
+export * from './createTree.ts';
+export { compressTree } from './compressTree.ts';

@@ -1,7 +1,8 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
-import { compressTree } from '../compressTree';
-import { Tree, createTree } from '../createTree';
+import { compressTree } from '../compressTree.ts';
+import type { Tree } from '../createTree.ts';
+import { createTree } from '../createTree.ts';
 
 test('compressTree', () => {
   const x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

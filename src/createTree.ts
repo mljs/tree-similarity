@@ -1,5 +1,5 @@
 import binarySearch from 'binary-search';
-import { DataXY } from 'cheminfo-types';
+import type { DataXY, NumberArray } from 'cheminfo-types';
 
 export interface Tree {
   sum: number;
@@ -40,23 +40,26 @@ export interface CreateTreeOptions {
  * @param dataXY
  * @param options
  */
-
 export function createTree(
   dataXY: DataXY,
   options: CreateTreeOptions = {},
 ): Tree | null {
   const { x, y } = dataXY;
-  const {
-    minWindow = 0.16,
-    threshold = 0.01,
-    from = x[0],
-    to = x.at(-1) as number,
-  } = options;
+  const { minWindow = 0.16, threshold = 0.01 } = options;
+  const from = options.from ?? x[0] ?? 0;
+  const to = options.to ?? x.at(-1) ?? 0;
 
   return mainCreateTree(x, y, from, to, minWindow, threshold);
 }
 
-function mainCreateTree(x, y, from, to, minWindow, threshold) {
+function mainCreateTree(
+  x: NumberArray,
+  y: NumberArray,
+  from: number,
+  to: number,
+  minWindow: number,
+  threshold: number,
+): Tree | null {
   if (to - from < minWindow) {
     return null;
   }
@@ -71,11 +74,13 @@ function mainCreateTree(x, y, from, to, minWindow, threshold) {
   let sum = 0;
   let center = 0;
   for (let i = start; i < x.length; i++) {
-    if (x[i] >= to) {
+    const xValue = x[i] as number;
+    const yValue = y[i] as number;
+    if (xValue >= to) {
       break;
     }
-    sum += y[i] as number;
-    center += x[i] * y[i];
+    sum += yValue;
+    center += xValue * yValue;
   }
 
   if (sum < threshold) {

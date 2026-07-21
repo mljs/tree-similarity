@@ -1,4 +1,4 @@
-import { Tree } from './createTree';
+import type { Tree } from './createTree.ts';
 
 /**
  * Destructive compression in which we reduce the number of decimals
@@ -27,5 +27,5 @@ export function compressTree(
       }
       return value;
     }),
-  );
+  ) as Tree;
 }

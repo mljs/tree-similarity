@@ -10,6 +10,8 @@ Compares two spectra using a tree similarity.
 
 `$ npm i ml-tree-similarity`
 
+> **Note:** This package is now ESM only. CommonJS projects can still `require()` it on Node.js ≥ 20.19, ≥ 22.12, or any 24.x; otherwise use `import`.
+
 ## Usage
 
 ```js
@@ -30,6 +32,15 @@ const aTree = createTree(a, options);
 const bTree = createTree(b, options);
 
 const ans = treeSimilarity(aTree, bTree, options);
+```
+
+`compressTree` is also exported to shrink a tree by rounding its numbers to a
+fixed number of decimals:
+
+```js
+import { compressTree } from 'ml-tree-similarity';
+
+const compact = compressTree(aTree, { fixed: 3 });
 ```
 
 ## [API Documentation](https://mljs.github.io/tree-similarity/)

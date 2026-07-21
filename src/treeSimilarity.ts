@@ -1,8 +1,20 @@
-import { Tree } from './createTree';
+import type { Tree } from './createTree.ts';
 
 export interface TreeSimilarityOptions {
+  /**
+   * weight of the sum ratio against the center distance in a node score
+   * @default 0.1
+   */
   alpha?: number;
+  /**
+   * weight of the current node against its children
+   * @default 0.33
+   */
   beta?: number;
+  /**
+   * decay factor applied to the distance between node centers
+   * @default 0.001
+   */
   gamma?: number;
 }
 
