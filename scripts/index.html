@@ -20,10 +20,10 @@
       }
       table.matrix {
         border-collapse: collapse;
-        font-size: 11px;
+        font-size: 10px;
       }
       table.matrix th {
-        padding: 2px 4px;
+        padding: 1px 3px;
         font-weight: 500;
         text-align: center;
       }
@@ -42,7 +42,7 @@
         font-weight: 700;
       }
       table.matrix td.cell {
-        width: 36px;
+        width: 26px;
         text-align: center;
         cursor: pointer;
         border: 1px solid #fff;
@@ -51,6 +51,38 @@
         outline: 2px solid #d33;
         outline-offset: -2px;
         font-weight: 700;
+      }
+      .methods {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 10px;
+        flex-wrap: wrap;
+      }
+      .methods-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #666;
+      }
+      .method-btn {
+        font: inherit;
+        font-size: 12px;
+        padding: 4px 12px;
+        border: 1px solid #cbd3d0;
+        background: #fff;
+        color: #333;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .method-btn:hover {
+        border-color: #2e7d32;
+      }
+      .method-btn.active {
+        background: #2e7d32;
+        border-color: #2e7d32;
+        color: #fff;
+        font-weight: 600;
       }
       .legend {
         display: flex;
@@ -73,6 +105,55 @@
       }
       #plots {
         margin-top: 16px;
+      }
+      #ranking {
+        flex: 0 0 auto;
+        max-height: 640px;
+        overflow-y: auto;
+      }
+      #ranking:empty {
+        display: none;
+      }
+      .rank-panel {
+        margin-bottom: 14px;
+      }
+      .rank-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .rank-hint {
+        color: #666;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+      table.rank-table {
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      table.rank-table td {
+        padding: 2px 8px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      table.rank-table tr:hover td.rank-num,
+      table.rank-table tr:hover td.rank-name {
+        background: #f0f0f0;
+      }
+      td.rank-num {
+        text-align: right;
+        color: #999;
+        font-variant-numeric: tabular-nums;
+      }
+      td.rank-val {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      table.rank-table tr.selected td {
+        outline: 2px solid #d33;
+        outline-offset: -2px;
+        font-weight: 700;
       }
       .pair-info {
         font-size: 13px;
@@ -147,10 +228,15 @@
         display: flex;
         gap: 20px;
         align-items: flex-start;
-        flex-wrap: wrap;
+      }
+      #matrix {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow-x: auto;
       }
       #stats {
         max-width: 340px;
+        margin-top: 16px;
         font-size: 12px;
       }
       .stats-title {
@@ -215,16 +301,22 @@
   <body>
     <h1>ml-tree-similarity explorer</h1>
     <p class="hint">
-      Click a matrix cell to compare two spectra, or click a spectrum name (or
-      column number) to view it alone. Hover a name for its description. On the
-      plots: drag to zoom X (synchronized), double-click to reset, scroll wheel
-      to zoom Y. The orange tree is the center-of-mass tree built by
-      <code>createTree</code>; the yellow line marks zero intensity.
+      Toggle the matrix algorithm between the current center-of-mass tree and
+      the equal-integration vector scored with ml-spectra-processing
+      (<code>xEqualIntegrationVectorSimilarity</code>); green = high similarity,
+      pink/red = low. Click a cell to compare two spectra, or a spectrum name
+      (or column number) to rank every sample by similarity to it — then click a
+      ranked row to compare the two spectra. Hover a name for its description.
+      On the plots: drag to zoom X (synchronized), double-click to reset, scroll
+      wheel to zoom Y. The orange tree in the plots follows the selected
+      algorithm — center-of-mass splits from <code>createTree</code>, or the
+      equal-integration split vector; the yellow line marks zero intensity.
     </p>
     <div id="board">
       <div id="matrix"></div>
-      <div id="stats"></div>
+      <div id="ranking"></div>
     </div>
+    <div id="stats"></div>
     <div id="plots"></div>
     <div id="tooltip"></div>
     <script type="module" src="./main.ts"></script>

@@ -1,3 +1,9 @@
+import {
+  xEqualIntegrationVectorSimilarity,
+  xyEqualIntegrationVector,
+  xySortX,
+} from 'ml-spectra-processing';
+
 import { parseSpectrum } from '../src/__tests__/parseSpectrum.ts';
 import type { Tree } from '../src/index.ts';
 import { createTree, treeSimilarity } from '../src/index.ts';
@@ -7,6 +13,11 @@ const TREE_H = 120;
 const SPEC_H = 230;
 const TOTAL_H = TREE_H + SPEC_H;
 const ROW_H = 12;
+
+// Equal-integration vector settings for the ml-spectra-processing similarity.
+const VECTOR_DEPTH = 6;
+const RECENTER = false;
+const positionSimilarity = (a: number, b: number) => Math.exp(-Math.abs(a - b));
 
 const shortName = (name: string) => name.replace(/\.(?:jdx|dx|jcamp)$/i, '');
 
@@ -99,6 +110,19 @@ const GROUPS: Group[] = [
     background: '#eceff1',
     members: ['aspirin', 'cyclosporin', 'cytisin', 'ethylvinylether'],
   },
+  {
+    label: 'Ibuprofen · field & solvent',
+    color: '#3949ab',
+    background: '#e8eaf6',
+    members: [
+      'ibuprofen-300-cdcl3',
+      'ibuprofen-400-cdcl3',
+      'ibuprofen-600-cdcl3',
+      'ibuprofen-300-dmso',
+      'ibuprofen-400-dmso',
+      'ibuprofen-600-dmso',
+    ],
+  },
 ];
 
 const OTHER_GROUP: Group = {
@@ -126,7 +150,8 @@ interface Meta {
   description: string;
 }
 
-// Peaks are height 100 with 5% noise (S/N ~ 20) unless stated otherwise.
+// Peaks are height 100 unless stated otherwise; every simulated spectrum states
+// its noise level in the description (S/N ~ 20 at 5% noise, ~ 100 at 1%).
 const META: Record<string, Meta> = {
   '01-three-peaks-clean': {
     label: 'Clean · no noise',
@@ -147,23 +172,25 @@ const META: Record<string, Meta> = {
   },
   '05-three-peaks-global-shift': {
     label: 'Global shift −1 ppm',
-    description: 'All peaks shifted to 1, 4, 7 ppm. Probes shift sensitivity.',
+    description:
+      'All peaks shifted to 1, 4, 7 ppm, 5% noise. Probes shift sensitivity.',
   },
   '06-three-peaks-local-shift': {
     label: 'Local shift 8 → 8.4',
-    description: 'Only the third peak moved to 8.4 ppm; the others stay put.',
+    description:
+      'Only the third peak moved to 8.4 ppm; the others stay put. 5% noise.',
   },
   '07-two-peaks': {
     label: 'Two peaks (5 missing)',
-    description: 'Middle peak removed: peaks only at 2 and 8 ppm.',
+    description: 'Middle peak removed: peaks only at 2 and 8 ppm, 5% noise.',
   },
   '08-four-peaks': {
     label: 'Four peaks',
-    description: 'An extra peak: 2, 4, 6, 8 ppm.',
+    description: 'An extra peak: 2, 4, 6, 8 ppm, 5% noise.',
   },
   '09-three-peaks-heights': {
     label: 'Heights 100/50/25',
-    description: 'Three peaks with decreasing heights (100, 50, 25).',
+    description: 'Three peaks with decreasing heights (100, 50, 25), 5% noise.',
   },
   '10-three-peaks-fwhm-0p01': {
     label: 'Width · fwhm 0.01',
@@ -171,17 +198,18 @@ const META: Record<string, Meta> = {
   },
   '11-three-peaks-1to9-dense': {
     label: '1–9 ppm · 10001 pts',
-    description: 'Reference peaks sampled over 1–9 ppm with 10001 points.',
+    description:
+      'Reference peaks sampled over 1–9 ppm with 10001 points, 5% noise.',
   },
   '12-three-peaks-1to9-sparse': {
     label: '1–9 ppm · 2001 pts',
     description:
-      'Every 5th point of the dense one: same peaks & noise, 5× coarser.',
+      'Every 5th point of the dense one: same peaks & 5% noise, 5× coarser.',
   },
   '13-three-peaks-tiny-extras': {
     label: '+2 tiny peaks',
     description:
-      'Noise-B spectrum plus two 5%-height peaks at 3.5 and 6.5 ppm.',
+      '5% noise (draw B) plus two 5%-height peaks at 3.5 and 6.5 ppm.',
   },
   '14-three-peaks-fwhm-0p02': {
     label: 'Width · fwhm 0.02',
@@ -194,11 +222,13 @@ const META: Record<string, Meta> = {
   },
   '16-three-peaks-linear-baseline': {
     label: 'Linear baseline',
-    description: 'Reference peaks with an added sloping (linear) baseline.',
+    description:
+      'Reference peaks with an added sloping (linear) baseline, 5% noise.',
   },
   '17-three-peaks-parabolic-baseline': {
     label: 'Parabolic baseline',
-    description: 'Reference peaks with an added parabolic (bowl) baseline.',
+    description:
+      'Reference peaks with an added parabolic (bowl) baseline, 5% noise.',
   },
   '18-three-peaks-noise-1pct-a': {
     label: '1% noise · A',
@@ -220,7 +250,8 @@ const META: Record<string, Meta> = {
   },
   '22-three-peaks-1pct-1001pts': {
     label: '1% noise · 1001 pts',
-    description: 'Every 100th point of the 100001-pt one: same peaks & noise.',
+    description:
+      'Every 100th point of the 100001-pt one: same peaks & 1% noise.',
   },
   aspirin: {
     label: 'Aspirin',
@@ -238,6 +269,30 @@ const META: Record<string, Meta> = {
     label: 'Ethyl vinyl ether',
     description: 'Real experimental ¹H NMR spectrum of ethyl vinyl ether.',
   },
+  'ibuprofen-300-cdcl3': {
+    label: 'Ibuprofen 300 · CDCl₃',
+    description: 'Real ¹H NMR of ibuprofen, 300 MHz in CDCl₃.',
+  },
+  'ibuprofen-400-cdcl3': {
+    label: 'Ibuprofen 400 · CDCl₃',
+    description: 'Real ¹H NMR of ibuprofen, 400 MHz in CDCl₃.',
+  },
+  'ibuprofen-600-cdcl3': {
+    label: 'Ibuprofen 600 · CDCl₃',
+    description: 'Real ¹H NMR of ibuprofen, 600 MHz in CDCl₃.',
+  },
+  'ibuprofen-300-dmso': {
+    label: 'Ibuprofen 300 · DMSO',
+    description: 'Real ¹H NMR of ibuprofen, 300 MHz in DMSO-d₆.',
+  },
+  'ibuprofen-400-dmso': {
+    label: 'Ibuprofen 400 · DMSO',
+    description: 'Real ¹H NMR of ibuprofen, 400 MHz in DMSO-d₆.',
+  },
+  'ibuprofen-600-dmso': {
+    label: 'Ibuprofen 600 · DMSO',
+    description: 'Real ¹H NMR of ibuprofen, 600 MHz in DMSO-d₆.',
+  },
 };
 
 function metaOf(name: string): Meta {
@@ -251,6 +306,8 @@ interface Spectrum {
   y: number[];
   tree: Tree | null;
   self: number;
+  /** equal-integration vector for the ml-spectra-processing similarity */
+  eiVector: Float64Array;
   xMin: number;
   xMax: number;
   group: Group;
@@ -268,6 +325,9 @@ const spectra: Spectrum[] = Object.entries(rawFiles)
     const name = path.split('/').at(-1) ?? path;
     const { x, y } = parseSpectrum(content);
     const tree = createTree({ x, y });
+    const eiVector = xyEqualIntegrationVector(xySortX({ x, y }), {
+      depth: VECTOR_DEPTH,
+    });
     let xMin = Number.POSITIVE_INFINITY;
     let xMax = Number.NEGATIVE_INFINITY;
     for (const value of x) {
@@ -281,6 +341,7 @@ const spectra: Spectrum[] = Object.entries(rawFiles)
       y,
       tree,
       self: treeSimilarity(tree, tree),
+      eiVector,
       xMin,
       xMax,
       group,
@@ -289,12 +350,32 @@ const spectra: Spectrum[] = Object.entries(rawFiles)
   })
   .toSorted((a, b) => a.order - b.order);
 
-const grid: number[][] = spectra.map((a) =>
-  spectra.map((b) => {
-    if (a.self === 0 || b.self === 0) return 0;
-    return treeSimilarity(a.tree, b.tree) / Math.sqrt(a.self * b.self);
-  }),
+// Two similarity matrices computed in parallel so the viewer can toggle between
+// them: the current center-of-mass tree, and the equal-integration vector scored
+// with the ml-spectra-processing algorithm.
+const gridTree: number[][] = spectra.map((a) =>
+  spectra.map((b) =>
+    a.self === 0 || b.self === 0
+      ? 0
+      : treeSimilarity(a.tree, b.tree) / Math.sqrt(a.self * b.self),
+  ),
 );
+const gridEI: number[][] = spectra.map((a) =>
+  spectra.map((b) =>
+    xEqualIntegrationVectorSimilarity(a.eiVector, b.eiVector, {
+      recenter: RECENTER,
+      similarityFct: positionSimilarity,
+    }),
+  ),
+);
+
+type Method = 'tree' | 'ei';
+const METHOD_LABELS: Record<Method, string> = {
+  tree: 'Current tree',
+  ei: 'Equal-integration + SP algo',
+};
+let method: Method = 'ei';
+const activeGrid = (): number[][] => (method === 'ei' ? gridEI : gridTree);
 
 function findIndex(fragment: string): number {
   const index = spectra.findIndex((s) => s.name.includes(fragment));
@@ -312,12 +393,19 @@ function collectCenters(tree: Tree | null, out: number[]): void {
   collectCenters(tree.right, out);
 }
 
-// Mean distance in ppm from each true peak to the nearest tree node center: how
+// Node positions of the active method: the center-of-mass tree, or the
+// equal-integration split vector (which the SP algorithm compares).
+function nodeCenters(spectrum: Spectrum): number[] {
+  if (method === 'ei') return Array.from(spectrum.eiVector);
+  const centers: number[] = [];
+  collectCenters(spectrum.tree, centers);
+  return centers;
+}
+
+// Mean distance in ppm from each true peak to the nearest tree node: how
 // precisely the tree drops a node on top of every real peak. Lower is better,
 // and it is the localization criterion we want the algorithm to improve.
-function peakLocalizationError(tree: Tree | null): number {
-  const centers: number[] = [];
-  collectCenters(tree, centers);
+function peakLocalizationError(centers: number[]): number {
   if (centers.length === 0) return Number.NaN;
   let total = 0;
   for (const peak of TRUE_PEAKS) {
@@ -331,26 +419,37 @@ function peakLocalizationError(tree: Tree | null): number {
   return total / TRUE_PEAKS.length;
 }
 
-let mode: 'pair' | 'single' = 'pair';
+let mode: 'pair' | 'ranked' = 'pair';
 let selA = findIndex('02-three-peaks-noise-a');
 let selB = findIndex('03-three-peaks-noise-b');
-let selSingle = 0;
+// The product a ranked list is built around (its row label was clicked).
+let rankAnchor = 0;
 const view = { xMin: 0, xMax: 10, yScale: 1 };
 
 function resetView(): void {
   view.yScale = 1;
-  if (mode === 'single') {
-    const single = spectra[selSingle];
-    if (!single) return;
-    view.xMin = single.xMin;
-    view.xMax = single.xMax;
-    return;
-  }
   const a = spectra[selA];
   const b = spectra[selB];
   if (!a || !b) return;
   view.xMin = Math.min(a.xMin, b.xMin);
   view.xMax = Math.max(a.xMax, b.xMax);
+}
+
+// All spectra scored against the anchor by the active method, best match first.
+function rankingFor(anchor: number): Array<{ index: number; value: number }> {
+  const row = activeGrid()[anchor] ?? [];
+  const list = spectra.map((_, index) => ({ index, value: row[index] ?? 0 }));
+  return list.toSorted((a, b) => b.value - a.value);
+}
+
+// Enter ranked mode: build the list around `anchor` and preselect the closest
+// other sample so the two plots below always show a meaningful comparison.
+function selectAnchor(anchor: number): void {
+  mode = 'ranked';
+  rankAnchor = anchor;
+  selA = anchor;
+  const best = rankingFor(anchor).find((entry) => entry.index !== anchor);
+  selB = best?.index ?? anchor;
 }
 
 const xToPx = (x: number) =>
@@ -386,6 +485,30 @@ function flattenTree(
   flattenTree(tree.right, level + 1, tree.center, level, out);
 }
 
+// The equal-integration vector is a complete binary tree in heap order: node i
+// has children 2i+1 and 2i+2 and parent floor((i-1)/2). Each entry is a split x.
+function equalIntegrationNodes(vector: Float64Array): FlatNode[] {
+  const out: FlatNode[] = [];
+  for (let i = 0; i < vector.length; i++) {
+    const level = Math.floor(Math.log2(i + 1));
+    const parent = i === 0 ? undefined : (i - 1) >> 1;
+    out.push({
+      center: vector[i] as number,
+      level,
+      parentCenter: parent === undefined ? undefined : vector[parent],
+      parentLevel: parent === undefined ? undefined : level - 1,
+    });
+  }
+  return out;
+}
+
+function treeNodes(sp: Spectrum): FlatNode[] {
+  if (method === 'ei') return equalIntegrationNodes(sp.eiVector);
+  const out: FlatNode[] = [];
+  flattenTree(sp.tree, 0, undefined, undefined, out);
+  return out;
+}
+
 function envelopePath(sp: Spectrum): string {
   const maxA = new Float64Array(PLOT_W).fill(Number.NEGATIVE_INFINITY);
   const minA = new Float64Array(PLOT_W).fill(Number.POSITIVE_INFINITY);
@@ -412,8 +535,7 @@ function envelopePath(sp: Spectrum): string {
 }
 
 function drawPlotSvg(sp: Spectrum): string {
-  const nodes: FlatNode[] = [];
-  flattenTree(sp.tree, 0, undefined, undefined, nodes);
+  const nodes = treeNodes(sp);
   const parts: string[] = [];
 
   for (const node of nodes) {
@@ -474,12 +596,39 @@ function drawPlotSvg(sp: Spectrum): string {
   return `<svg width="${PLOT_W}" height="${TOTAL_H}" viewBox="0 0 ${PLOT_W} ${TOTAL_H}">${parts.join('')}</svg>`;
 }
 
+// Diverging scale: green for high similarity, pink/red for low, over 0.4-1.0.
 function cellColor(value: number): string {
-  const t = Math.min(1, Math.max(0, (value - 0.75) / 0.25));
-  const r = Math.round(255 - t * 215);
-  const g = Math.round(255 - t * 95);
-  const b = Math.round(255 - t * 130);
+  const mid = 0.75;
+  const clamped = Math.min(1, Math.max(0.4, value));
+  let toR: number;
+  let toG: number;
+  let toB: number;
+  let t: number;
+  if (clamped >= mid) {
+    toR = 27;
+    toG = 132;
+    toB = 60;
+    t = (clamped - mid) / (1 - mid);
+  } else {
+    toR = 194;
+    toG = 55;
+    toB = 64;
+    t = (mid - clamped) / (mid - 0.4);
+  }
+  const r = Math.round(244 + (toR - 244) * t);
+  const g = Math.round(241 + (toG - 241) * t);
+  const b = Math.round(234 + (toB - 234) * t);
   return `rgb(${r},${g},${b})`;
+}
+
+function renderMethods(): string {
+  const buttons = (Object.keys(METHOD_LABELS) as Method[])
+    .map(
+      (key) =>
+        `<button class="method-btn${key === method ? ' active' : ''}" data-method="${key}">${METHOD_LABELS[key]}</button>`,
+    )
+    .join('');
+  return `<div class="methods"><span class="methods-label">Matrix algorithm</span>${buttons}</div>`;
 }
 
 function renderLegend(): string {
@@ -493,6 +642,7 @@ function renderLegend(): string {
 function renderMatrix(): void {
   const container = document.querySelector('#matrix');
   if (!container) return;
+  const grid = activeGrid();
   const header = `<tr><th></th>${spectra
     .map(
       (s, i) =>
@@ -502,20 +652,19 @@ function renderMatrix(): void {
   const body = spectra
     .map((rowSpectrum, i) => {
       const rowSelected =
-        mode === 'single' && i === selSingle ? ' selected' : '';
+        mode === 'ranked' && i === rankAnchor ? ' selected' : '';
       const label = `<th class="rowlabel${rowSelected}" data-index="${i}" style="border-left:5px solid ${rowSpectrum.group.color};background:${rowSpectrum.group.background}">${i + 1}. ${metaOf(rowSpectrum.name).label}</th>`;
       const cells = spectra
         .map((_, j) => {
           const value = grid[i]?.[j] ?? 0;
-          const selected =
-            mode === 'pair' && i === selA && j === selB ? ' selected' : '';
+          const selected = i === selA && j === selB ? ' selected' : '';
           return `<td class="cell${selected}" data-i="${i}" data-j="${j}" style="background:${cellColor(value)}">${value.toFixed(2)}</td>`;
         })
         .join('');
       return `<tr>${label}${cells}</tr>`;
     })
     .join('');
-  container.innerHTML = `${renderLegend()}<table class="matrix">${header}${body}</table>`;
+  container.innerHTML = `${renderMethods()}${renderLegend()}<table class="matrix">${header}${body}</table>`;
 }
 
 function renderStats(): void {
@@ -525,12 +674,13 @@ function renderStats(): void {
     .map((spectrum, index) => ({ spectrum, index }))
     .filter(({ spectrum }) => spectrum.group.stats);
 
+  const grid = activeGrid();
   let sumSimilarity = 0;
   let sumError = 0;
   const rows = entries
     .map(({ spectrum, index }) => {
       const similarityToClean = grid[index]?.[cleanIndex] ?? 0;
-      const error = peakLocalizationError(spectrum.tree);
+      const error = peakLocalizationError(nodeCenters(spectrum));
       sumSimilarity += similarityToClean;
       sumError += error;
       return `<tr>
@@ -545,10 +695,10 @@ function renderStats(): void {
   container.innerHTML = `
     <div class="stats-title">Quality — green + blue set (${entries.length})</div>
     <div class="stats-sub">
-      All share true peaks at 2 / 5 / 8 ppm. <b>Sim→clean</b> is the normalized
-      tree similarity to the clean spectrum; <b>Peak err</b> is the mean ppm gap
-      from each true peak to the nearest tree node — the localization criterion
-      to drive down.
+      All share true peaks at 2 / 5 / 8 ppm. <b>Sim→clean</b> is the
+      <i>${METHOD_LABELS[method]}</i> similarity to the clean spectrum;
+      <b>Peak err</b> is the mean ppm gap from each true peak to the nearest
+      center-of-mass tree node — the localization criterion to drive down.
     </div>
     <table class="stats-table">
       <tr><th>Spectrum</th><th>Sim→clean</th><th>Peak err (ppm)</th></tr>
@@ -561,25 +711,52 @@ function renderStats(): void {
     </table>`;
 }
 
+function renderRankingList(anchor: number): string {
+  const anchorSpectrum = spectra[anchor];
+  if (!anchorSpectrum) return '';
+  const rows = rankingFor(anchor)
+    .map((entry, rank) => {
+      const sp = spectra[entry.index];
+      if (!sp) return '';
+      const isAnchor = entry.index === anchor;
+      const isSelected = entry.index === selB ? ' selected' : '';
+      const selfTag = isAnchor ? ' <span class="muted">(self)</span>' : '';
+      return `<tr class="rank-row${isSelected}" data-index="${entry.index}">
+        <td class="rank-num">${rank + 1}</td>
+        <td class="rank-name" style="border-left:4px solid ${sp.group.color}">${metaOf(sp.name).label}${selfTag}</td>
+        <td class="rank-val" style="background:${cellColor(entry.value)}">${entry.value.toFixed(3)}</td>
+      </tr>`;
+    })
+    .join('');
+  return `<div class="rank-panel">
+      <div class="rank-title">Samples ranked by similarity to <b>${metaOf(anchorSpectrum.name).label}</b> <span class="muted">(${METHOD_LABELS[method]})</span></div>
+      <div class="rank-hint">Click a row to view the two spectra below.</div>
+      <table class="rank-table">${rows}</table>
+    </div>`;
+}
+
+function pairPlotsHtml(): string {
+  const a = spectra[selA];
+  const b = spectra[selB];
+  if (!a || !b) return '';
+  const value = (activeGrid()[selA]?.[selB] ?? 0).toFixed(3);
+  return (
+    `<div class="pair-info">Similarity <b>${value}</b> <span class="muted">(${METHOD_LABELS[method]})</span> — ${metaOf(a.name).label} vs ${metaOf(b.name).label}</div>` +
+    `<div class="plot" data-plot>${drawPlotSvg(a)}</div>` +
+    `<div class="plot" data-plot>${drawPlotSvg(b)}</div>`
+  );
+}
+
+function renderRanking(): void {
+  const container = document.querySelector('#ranking');
+  if (!container) return;
+  container.innerHTML = mode === 'ranked' ? renderRankingList(rankAnchor) : '';
+}
+
 function renderPlots(): void {
   const container = document.querySelector('#plots');
   if (!container) return;
-  if (mode === 'single') {
-    const single = spectra[selSingle];
-    if (!single) return;
-    container.innerHTML =
-      `<div class="pair-info">Single spectrum — <b>${metaOf(single.name).label}</b> <span class="muted">(${shortName(single.name)})</span> — click a matrix cell to compare two.</div>` +
-      `<div class="plot" data-plot>${drawPlotSvg(single)}</div>`;
-  } else {
-    const a = spectra[selA];
-    const b = spectra[selB];
-    if (!a || !b) return;
-    const value = (grid[selA]?.[selB] ?? 0).toFixed(3);
-    container.innerHTML =
-      `<div class="pair-info">Similarity <b>${value}</b> — ${metaOf(a.name).label} vs ${metaOf(b.name).label}</div>` +
-      `<div class="plot" data-plot>${drawPlotSvg(a)}</div>` +
-      `<div class="plot" data-plot>${drawPlotSvg(b)}</div>`;
-  }
+  container.innerHTML = pairPlotsHtml();
   for (const svg of document.querySelectorAll('#plots svg')) {
     svg.addEventListener('mousedown', onDown as EventListener);
     svg.addEventListener('dblclick', onReset);
@@ -676,6 +853,17 @@ function init(): void {
   const matrix = document.querySelector('#matrix');
   matrix?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
+    const methodButton = target.closest('.method-btn');
+    if (methodButton) {
+      method = (methodButton as HTMLElement).dataset.method as Method;
+      if (mode === 'ranked') selectAnchor(rankAnchor);
+      hideTooltip();
+      renderMatrix();
+      renderStats();
+      renderRanking();
+      renderPlots();
+      return;
+    }
     const cell = target.closest('td.cell');
     if (cell) {
       mode = 'pair';
@@ -684,12 +872,12 @@ function init(): void {
     } else {
       const label = target.closest('.rowlabel, .col');
       if (!label) return;
-      mode = 'single';
-      selSingle = Number(label.dataset.index);
+      selectAnchor(Number(label.dataset.index));
     }
     hideTooltip();
     resetView();
     renderMatrix();
+    renderRanking();
     renderPlots();
   });
   matrix?.addEventListener('mousemove', (event) => {
@@ -701,11 +889,22 @@ function init(): void {
     }
   });
   matrix?.addEventListener('mouseleave', hideTooltip);
+  const ranking = document.querySelector('#ranking');
+  ranking?.addEventListener('click', (event) => {
+    const row = (event.target as HTMLElement).closest('.rank-row');
+    if (!row) return;
+    selB = Number((row as HTMLElement).dataset.index);
+    resetView();
+    renderMatrix();
+    renderRanking();
+    renderPlots();
+  });
   window.addEventListener('mousemove', onMove);
   window.addEventListener('mouseup', onUp);
   resetView();
   renderMatrix();
   renderStats();
+  renderRanking();
   renderPlots();
 }
 

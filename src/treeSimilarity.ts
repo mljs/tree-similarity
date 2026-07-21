@@ -12,10 +12,17 @@ export interface TreeSimilarityOptions {
    */
   beta?: number;
   /**
-   * decay factor applied to the distance between node centers
+   * decay factor applied to the distance between node centers, in the penalty
+   * `exp(-gamma * |Δcenter|)`. Ignored when `tolerance` is provided.
    * @default 0.001
    */
   gamma?: number;
+  /**
+   * alternative to `gamma`, expressed in the same units as the node centers:
+   * the distance between two node centers at which the penalty drops to 0.5.
+   * When set, it overrides `gamma` (`gamma = ln2 / tolerance`).
+   */
+  tolerance?: number;
 }
 
 /**
@@ -30,7 +37,7 @@ export function treeSimilarity(
   treeB: Tree | null,
   options: TreeSimilarityOptions = {},
 ): number {
-  const { alpha = 0.1, beta = 0.33, gamma = 0.001 } = options;
+  const { alpha = 0.1, beta = 0.33, gamma = 0.001, tolerance } = options;
 
   if (treeA === null || treeB === null) {
     return 0;
@@ -44,9 +51,10 @@ export function treeSimilarity(
     return 1;
   }
 
+  const decay = tolerance === undefined ? gamma : Math.LN2 / tolerance;
   const C =
     (alpha * Math.min(treeA.sum, treeB.sum)) / Math.max(treeA.sum, treeB.sum) +
-    (1 - alpha) * Math.exp(-gamma * Math.abs(treeA.center - treeB.center));
+    (1 - alpha) * Math.exp(-decay * Math.abs(treeA.center - treeB.center));
 
   return (
     beta * C +

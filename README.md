@@ -66,11 +66,20 @@ spectra stored with decreasing ppm (as usual for NMR) are reversed, then run thr
 
 ### `treeSimilarity` options
 
-| option  | default | meaning                                             |
-| ------- | ------- | --------------------------------------------------- |
-| `alpha` | `0.1`   | weight of the intensity match vs. the shift match   |
-| `beta`  | `0.33`  | weight of a node vs. its children (shift tolerance) |
-| `gamma` | `0.001` | decay of the shift penalty `exp(−γ·\|Δcenter\|)`    |
+| option      | default | meaning                                                                      |
+| ----------- | ------- | ---------------------------------------------------------------------------- |
+| `alpha`     | `0.1`   | weight of the intensity match vs. the shift match                            |
+| `beta`      | `0.33`  | weight of a node vs. its children (shift tolerance)                          |
+| `gamma`     | `0.001` | decay of the shift penalty `exp(−γ·\|Δcenter\|)`                             |
+| `tolerance` | —       | alternative to `gamma`: node-center distance at which the penalty hits `0.5` |
+
+The shift penalty is `exp(−γ·\|Δcenter\|)`. Instead of tuning `γ` directly you can
+pass `tolerance`, expressed in the same units as the x axis: it is the position
+shift that halves a node's score, and it overrides `gamma` via
+`γ = ln2 / tolerance`. Pick it to match the position drift you expect between two
+spectra of the same compound: for ¹H NMR (shifts in ppm) something like `0.1`, and
+for ¹³C — where lines move over a much wider range — around `1`. Larger values are
+more forgiving of shifts but let different compounds look more alike.
 
 > **Note:** the raw similarity is **not** self-normalized (`treeSimilarity(a, a) ≠ 1`).
 > For a comparable measure divide by `sqrt(s(a,a) · s(b,b))`.
